@@ -2,7 +2,7 @@ CXX=g++
 CXXFLAGS=-std=c++14 -I./src/cutf -I./src/cxxopts/include -I/usr/local/cuda/samples/common/inc/ -O3
 OMPFLAGS=-fopenmp
 NVCC=nvcc
-NVCCFLAGS=$(CXXFLAGS)  --compiler-bindir=$(CXX) -Xcompiler=$(OMPFLAGS) -lcublas -arch=sm_30
+NVCCFLAGS=$(CXXFLAGS)  --compiler-bindir=$(CXX) -Xcompiler=$(OMPFLAGS) -lcublas -arch=sm_30 -lnvidia-ml
 SRCDIR=src
 SRCS=$(shell find $(SRCDIR) -maxdepth 1 -name '*.cu' -o -name '*.cpp')
 OBJDIR=objs
