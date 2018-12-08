@@ -30,7 +30,7 @@ void run_gemm_kernel(const int num_sm, const int num_cuda_core_per_sm){
 	T beta = cutf::cuda::type::cast<T>(0.0f);
 
 	for(auto c = decltype(C)(0); c < C; c++){
-		cutf::cublas::gemm(
+		cutf::cublas::error::check(cutf::cublas::gemm(
 				*cublas.get(),
 				CUBLAS_OP_N, CUBLAS_OP_N,
 				N, N, N,
@@ -39,7 +39,7 @@ void run_gemm_kernel(const int num_sm, const int num_cuda_core_per_sm){
 				dB.get(), N,
 				&beta,
 				dC.get(), N
-				);
+				), __FILE__, __LINE__, __func__);
 	}
 }
 }
