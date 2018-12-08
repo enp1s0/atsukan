@@ -1,6 +1,6 @@
 [submodule "cutf"]
-	path = cutf
+	path = src/cutf
 	url = https://gitlab.momo86.net/mutsuki/cutf
 [submodule "cxxopts"]
-	path = cxxopts
+	path = src/cxxopts
 	url = https://github.com/jarro2783/cxxopts
