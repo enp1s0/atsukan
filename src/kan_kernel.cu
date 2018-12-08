@@ -5,25 +5,6 @@
 namespace{
 template <class T>
 __global__ void julia_kernel(T* const ptr){
-	constexpr std::size_t N = 1 << 30;
-	T v = cutf::cuda::type::cast<T>(static_cast<float>(threadIdx.x));
-
-#pragma unroll
-	for(std::size_t i = 0; i < N; i++){
-		v = v * v;
-		v = v * v;
-		v = v * v;
-		v = v * v;
-		v = v * v;
-		v = v * v;
-		v = v * v;
-		v = v * v;
-		v = v * v;
-		v = v * v;
-		v = v * v;
-	}
-
-	*ptr = v;
 }
 template <class T>
 void run_julia_kernel(const int num_sm, const int num_cuda_core_per_sm){
