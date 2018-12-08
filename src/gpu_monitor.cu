@@ -7,7 +7,7 @@
 
 #define NVML_ERROR_HANDLE(status) cutf::nvml::error::check(status, __FILE__, __LINE__, __func__)
 
-gpu_monitor::monitor::monitor(unsigned int gpu_id){
+gpu_monitor::monitor::monitor(unsigned int gpu_id) : max_power(0), max_temperature(0){
 	NVML_ERROR_HANDLE(nvmlInit());
 	NVML_ERROR_HANDLE(nvmlDeviceGetHandleByIndex(gpu_id, &device));
 	NVML_ERROR_HANDLE(nvmlDeviceGetEnforcedPowerLimit(device, &power_max_limit));
@@ -25,7 +25,7 @@ std::string gpu_monitor::monitor::get_gpu_status_pre_string(const gpu_monitor::s
 		pre_status_string = "Power limit    : " + std::to_string(power_max_limit/1000.0);
 		break;
 	case gpu_monitor::csv:
-		pre_status_string = "temperature,power,max_power";
+		pre_status_string = "temperature,power,power_max_limit";
 		break;
 	default:
 		break;
@@ -41,8 +41,12 @@ std::string gpu_monitor::monitor::get_gpu_status_string(const gpu_monitor::strin
 	NVML_ERROR_HANDLE(nvmlDeviceGetPowerUsage(device, &current_power));
 	// }}}
 
-	std::string status_string;
+	// record max {{{
+	max_power = std::max(max_power, current_power);
+	max_temperature = std::max(max_temperature, temperature);
+	// }}}
 
+	std::string status_string;
 	if(string_mode == gpu_monitor::human){
 		std::stringstream ss;
 		ss<<"Temp:"<<std::setw(3)<<temperature<<"C, Pow:"<<std::setw(5)<<(current_power/1000.0)<<"W";
@@ -52,4 +56,12 @@ std::string gpu_monitor::monitor::get_gpu_status_string(const gpu_monitor::strin
 	}
 
 	return status_string;
+}
+
+unsigned int gpu_monitor::monitor::get_max_power() const{
+	return max_power;
+}
+
+unsigned int gpu_monitor::monitor::get_max_temperature() const{
+	return max_temperature;
 }
