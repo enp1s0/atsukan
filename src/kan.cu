@@ -42,8 +42,8 @@ void kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm
 	// }}}
 	kan_thread.join();
 
-	std::cout<<std::endl;
-	std::cout<<"# Result"<<std::endl
+	std::cerr<<std::endl;
+	std::cerr<<"# Result"<<std::endl
 		<<"  - max temperature      : "<<gpu_monitor.get_max_temperature()<<"C"<<std::endl
 		<<"  - max power            : "<<(gpu_monitor.get_max_power()/1000.0)<<"W"<<std::endl;
 }
