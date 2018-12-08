@@ -12,7 +12,7 @@ class monitor{
 	nvmlDevice_t device;
 	unsigned int power_max_limit;
 
-	// max
+	// max value
 	unsigned int max_power;
 	unsigned int max_temperature;
 public:
