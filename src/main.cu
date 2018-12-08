@@ -38,12 +38,12 @@ int main(int argc, char** argv){
 
 	// print USAGE {{{
 	if(args.count("help")){
-		std::cout<<options.help({""})<<std::endl;
+		std::cerr<<options.help({""})<<std::endl;
 		return 0;
 	}
 	// }}}
-	std::cout<<project_name<<std::endl;
-	std::cout<<std::endl;
+	std::cerr<<project_name<<std::endl;
+	std::cerr<<std::endl;
 
 	// print GPU Information {{{
 	const auto gpu_id = args["gpu"].as<unsigned int>();
@@ -56,14 +56,14 @@ int main(int argc, char** argv){
 	const int num_sm = device_prop.multiProcessorCount;
 	const int num_cuda_core_per_sm = _ConvertSMVer2Cores(device_prop.major, device_prop.minor);
 
-	std::cout
+	std::cerr
 		<<"# Device information"<<std::endl
 		<<"  - GPU ID               : "<<gpu_id<<std::endl
 		<<"  - GPU name             : "<<device_prop.name<<std::endl
 		<<"  - #SM                  : "<<num_sm<<std::endl
 		<<"  - #CUDA Cores per a SM : "<<num_cuda_core_per_sm<<std::endl
 		<<"  - Clock rate           : "<<device_prop.clockRate<<" kHz"<<std::endl;
-	std::cout<<std::endl;
+	std::cerr<<std::endl;
 	// }}}
 	
 
@@ -72,20 +72,20 @@ int main(int argc, char** argv){
 	const auto type_name = args["type"].as<std::string>();
 	const auto algorithm_id = get_algorithm_id(algorithm_name);
 	const auto run_function = get_run_function(type_name);
-	std::cout
+	std::cerr
 		<<"# Algorithm information"<<std::endl
 		<<"  - Algorithm name       : "<<algorithm_name<<std::endl
 		<<"  - Computing type       : "<<type_name<<std::endl;
-	std::cout<<std::endl;
+	std::cerr<<std::endl;
 	// }}}
 	
 	// print output information {{{
 	const auto string_mode_name = args["print_mode"].as<std::string>();
 	const auto string_mode_id = get_string_mode_id(string_mode_name);
-	std::cout
+	std::cerr
 		<<"# Output information"<<std::endl
 		<<"  - Output string type   : "<<string_mode_name<<std::endl;
-	std::cout<<std::endl;
+	std::cerr<<std::endl;
 
 	// }
 	
