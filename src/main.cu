@@ -36,6 +36,7 @@ int main(int argc, char** argv){
 	}
 	// }}}
 	std::cout<<project_name<<std::endl;
+	std::cout<<std::endl;
 
 	// print GPU Information {{{
 	const auto gpu_id = args["gpu"].as<unsigned int>();
@@ -55,9 +56,9 @@ int main(int argc, char** argv){
 		<<"  - #SM                  : "<<num_sm<<std::endl
 		<<"  - #CUDA Cores per a SM : "<<num_cuda_core_per_sm<<std::endl
 		<<"  - Clock rate           : "<<device_prop.clockRate<<" kHz"<<std::endl;
+	std::cout<<std::endl;
 	// }}}
 	
-	std::cout<<std::endl;
 
 	// print algorithm information {{{
 	const auto algorithm_name = args["algorithm"].as<std::string>();
@@ -68,6 +69,7 @@ int main(int argc, char** argv){
 		<<"# Algorithm information"<<std::endl
 		<<"  - Algorithm name       : "<<algorithm_name<<std::endl
 		<<"  - Computing type       : "<<type_name<<std::endl;
+	std::cout<<std::endl;
 	// }}}
 	
 	// run {{{
