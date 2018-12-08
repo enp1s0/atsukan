@@ -17,8 +17,11 @@ void run_julia_kernel(const int num_sm, const int num_cuda_core_per_sm){
 // gemm kernel
 template <class T>
 void run_gemm_kernel(const int num_sm, const int num_cuda_core_per_sm){
+	// 席を計算する行列の大きさ N x N
 	constexpr std::size_t N = 1 << 12;
+	// 計算回数
 	constexpr std::size_t C = 1 << 14;
+
 	auto dA = cutf::cuda::memory::get_device_unique_ptr<T>(N * N);
 	auto dB = cutf::cuda::memory::get_device_unique_ptr<T>(N * N);
 	auto dC = cutf::cuda::memory::get_device_unique_ptr<T>(N * N);
