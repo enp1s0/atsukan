@@ -15,7 +15,7 @@ kan::algorithm_id get_algorithm_id(const std::string algorithm_name){
 std::function<void(int, int, kan::algorithm_id)> get_run_function(const std::string type_name){
 	if(type_name == "float") return [](int a, int b, kan::algorithm_id c){kan::run<float>(a, b, c);};
 	if(type_name == "double") return [](int a, int b, kan::algorithm_id c){kan::run<double>(a, b, c);};
-	throw std::runtime_error("No such a type: " + type_name);
+	throw std::runtime_error("No such a type : " + type_name);
 }
 }
 
