@@ -26,8 +26,8 @@ void run_gemm_kernel(const int num_sm, const int num_cuda_core_per_sm){
 	auto dB = cutf::cuda::memory::get_device_unique_ptr<T>(N * N);
 	auto dC = cutf::cuda::memory::get_device_unique_ptr<T>(N * N);
 	auto cublas = cutf::cublas::get_cublas_unique_ptr();
-	T alpha = cutf::cuda::type::cast<T>(0.0f);
-	T beta = cutf::cuda::type::cast<T>(0.0f);
+	const T alpha = cutf::cuda::type::cast<T>(0.0f);
+	const T beta = cutf::cuda::type::cast<T>(0.0f);
 
 	for(auto c = decltype(C)(0); c < C; c++){
 		cutf::cublas::error::check(cutf::cublas::gemm(
