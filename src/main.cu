@@ -18,9 +18,9 @@ gpu_monitor::string_mode_id get_string_mode_id(const std::string string_mode_nam
 	throw std::runtime_error("No such printing mode : " + string_mode_name);
 }
 
-std::function<void(int, int, kan::algorithm_id, gpu_monitor::string_mode_id)> get_run_function(const std::string type_name){
-	if(type_name == "float") return [](int a, int b, kan::algorithm_id c, gpu_monitor::string_mode_id d){kan::run<float>(a, b, c, d);};
-	if(type_name == "double") return [](int a, int b, kan::algorithm_id c, gpu_monitor::string_mode_id d){kan::run<double>(a, b, c, d);};
+std::function<void(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id)> get_run_function(const std::string type_name){
+	if(type_name == "float") return [](int g, int a, int b, kan::algorithm_id c, gpu_monitor::string_mode_id d){kan::run<float>(g, a, b, c, d);};
+	if(type_name == "double") return [](int g, int a, int b, kan::algorithm_id c, gpu_monitor::string_mode_id d){kan::run<double>(g, a, b, c, d);};
 	throw std::runtime_error("No such a type : " + type_name);
 }
 }
@@ -90,6 +90,6 @@ int main(int argc, char** argv){
 	// }
 	
 	// run {{{
-	run_function(num_sm, num_cuda_core_per_sm, algorithm_id, string_mode_id);
+	run_function(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id, string_mode_id);
 	// }}}
 }
