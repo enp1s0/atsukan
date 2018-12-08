@@ -80,7 +80,7 @@ int main(int argc, char** argv){
 	// }}}
 	
 	// print output information {{{
-	const auto string_mode_name = args["string_mode"].as<std::string>();
+	const auto string_mode_name = args["print_mode"].as<std::string>();
 	const auto string_mode_id = get_string_mode_id(string_mode_name);
 	std::cout
 		<<"# Output information"<<std::endl
