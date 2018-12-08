@@ -16,6 +16,8 @@ gpu_monitor::monitor::~monitor(){
 	NVML_ERROR_HANDLE(nvmlShutdown());
 }
 
+// pre print string
+// e.g. csv columun title
 std::string gpu_monitor::monitor::get_gpu_status_pre_string(const gpu_monitor::string_mode_id string_mode){
 	std::string pre_status_string;
 	switch (string_mode) {
@@ -32,10 +34,12 @@ std::string gpu_monitor::monitor::get_gpu_status_pre_string(const gpu_monitor::s
 }
 
 std::string gpu_monitor::monitor::get_gpu_status_string(const gpu_monitor::string_mode_id string_mode){
+	// get gpu temperature/power {{{
 	unsigned int temperature;
 	unsigned int current_power;
 	NVML_ERROR_HANDLE(nvmlDeviceGetTemperature(device, NVML_TEMPERATURE_GPU, &temperature));
 	NVML_ERROR_HANDLE(nvmlDeviceGetPowerUsage(device, &current_power));
+	// }}}
 
 	std::string status_string;
 

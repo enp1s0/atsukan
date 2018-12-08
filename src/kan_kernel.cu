@@ -14,6 +14,7 @@ void run_julia_kernel(const int num_sm, const int num_cuda_core_per_sm){
 }
 }
 
+// kernel selector
 template <class T>
 void kan_kernel::run_kan_kernel(const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algo){
 	switch (algo) {
@@ -25,5 +26,6 @@ void kan_kernel::run_kan_kernel(const int num_sm, const int num_cuda_core_per_sm
 	}
 }
 
+// instance
 template void kan_kernel::run_kan_kernel<float>(int, int, kan::algorithm_id);
 template void kan_kernel::run_kan_kernel<double>(int, int, kan::algorithm_id);
