@@ -1,4 +1,4 @@
-![ATSUKAN LOGO](./docs/atsukan.svg)
+![ATSUKAN LOGO](https://gitlab.momo86.net/mutsuki/atsukan/raw/master/docs/atsukan.svg)
 
 # High Performance Computing for ATSUKAN
 冬ですね．  
