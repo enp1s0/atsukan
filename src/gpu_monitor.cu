@@ -37,8 +37,10 @@ std::string gpu_monitor::monitor::get_gpu_status_string(const gpu_monitor::strin
 	// get gpu temperature/power {{{
 	unsigned int temperature;
 	unsigned int current_power;
+	nvmlPstates_t state;
 	NVML_ERROR_HANDLE(nvmlDeviceGetTemperature(device, NVML_TEMPERATURE_GPU, &temperature));
 	NVML_ERROR_HANDLE(nvmlDeviceGetPowerUsage(device, &current_power));
+	NVML_ERROR_HANDLE(nvmlDeviceGetPerformanceState(device, &state));
 	// }}}
 
 	// record max {{{
