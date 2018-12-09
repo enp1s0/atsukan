@@ -3,14 +3,22 @@
 #include <unistd.h>
 #include <iomanip>
 #include <functional>
+#include <memory>
 #include <thread>
 #include "kan.hpp"
-#include "kan_kernel.hpp"
+#include "kan_algorithm.hpp"
 
-namespace{
+namespace {
 template <class T>
-std::function<void(void)> get_kan_function(const int num_sm, const int num_cuda_core_per_sm, const kan::algorithm_id algo, bool& kan_complete){
-	return [num_sm, num_cuda_core_per_sm, &algo, &kan_complete](){kan_kernel::run_kan_kernel<T>(num_sm, num_cuda_core_per_sm, algo);kan_complete = true;};
+std::unique_ptr<kan_algorithm::kan_module<T>> get_kan_algorithm(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id){
+	kan_algorithm::kan_module<T>* ptr = nullptr;
+	switch (algorithm_id) {
+	case kan::algorithm_id::gemm:
+		ptr = new kan_algorithm::gemm<T>(gpu_id);
+	default:
+		; // 世界で一番簡単な文
+	}
+	return std::unique_ptr<kan_algorithm::kan_module<T>>{ptr};
 }
 }
 
@@ -18,8 +26,8 @@ template <class T>
 void kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id){
 	// start kan thread {{{
 	bool kan_complete = false;
-	const auto kan_function = get_kan_function<T>(num_sm, num_cuda_core_per_sm, algorithm_id, kan_complete);
-	std::thread kan_thread(kan_function);
+	auto kan_algorithm = get_kan_algorithm<T>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id);
+	std::thread kan_thread([&kan_algorithm](){kan_algorithm.get()->run(3, {1024});});
 	// }}}
 
 	// monitoring GPU {{{
