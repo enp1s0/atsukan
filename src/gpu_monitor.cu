@@ -37,10 +37,10 @@ std::string gpu_monitor::monitor::get_gpu_status_string(const gpu_monitor::strin
 	// get gpu temperature/power {{{
 	unsigned int temperature;
 	unsigned int current_power;
-	nvmlPstates_t state;
+	nvmlPstates_t states;
 	NVML_ERROR_HANDLE(nvmlDeviceGetTemperature(device, NVML_TEMPERATURE_GPU, &temperature));
 	NVML_ERROR_HANDLE(nvmlDeviceGetPowerUsage(device, &current_power));
-	NVML_ERROR_HANDLE(nvmlDeviceGetPerformanceState(device, &state));
+	NVML_ERROR_HANDLE(nvmlDeviceGetPerformanceState(device, &states));
 	// }}}
 
 	// record max {{{
@@ -51,7 +51,7 @@ std::string gpu_monitor::monitor::get_gpu_status_string(const gpu_monitor::strin
 	std::string status_string;
 	if(string_mode == gpu_monitor::human){
 		std::stringstream ss;
-		ss<<"Temp:"<<std::setw(3)<<temperature<<"C, Pow:"<<std::setw(5)<<(current_power/1000.0)<<"W, Perf :P" + std::to_string((int) state);
+		ss<<"Temp:"<<std::setw(3)<<temperature<<"C, Pow:"<<std::setw(5)<<(current_power/1000.0)<<"W, Perf :P" + std::to_string((int) states);
 		status_string = ss.str();
 	}else if(string_mode == gpu_monitor::csv){
 		status_string = std::to_string(temperature) + "," + std::to_string(current_power/1000.0) + "," + std::to_string(power_max_limit/1000.0);
