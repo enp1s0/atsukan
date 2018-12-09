@@ -23,6 +23,7 @@ template <class T>
 class gemm : public kan_base<T>{
 public:
 	gemm(const int gpu_id);
+	// parameters[0] : 行列サイズ N (N x N)
 	void run(const int C, std::vector<int> parameters);
 };
 
@@ -31,6 +32,9 @@ template <class T>
 class julia : public kan_base<T>{
 public:
 	julia(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm);
+	// parameters[0] : 領域サイズdim (dim x dim)
+	// parameters[1] : gridサイズ
+	// parameters[2] : blockサイズ
 	void run(const int C, std::vector<int> parameters);
 };
 } // kan_module
