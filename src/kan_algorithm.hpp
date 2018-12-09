@@ -13,6 +13,8 @@ public:
 	kan_module(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : gpu_id(gpu_id), num_sm(num_sm), num_cuda_core_per_sm(num_cuda_core_per_sm){}
 
 	// 燗アルゴリズムの実行
+	// C : 計算回数を制御する変数．最適化実行時は値を小さくして評価を行う．
+	// parameters : ハイパーパラメータ．最適化ではこれをいじる．
 	virtual void run(const int C, std::vector<int> parameters) = 0;
 };
 
