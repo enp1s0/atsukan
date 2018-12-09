@@ -1,3 +1,6 @@
+#include <cutf/type.hpp>
+#include <cutf/memory.hpp>
+#include <cutf/cublas.hpp>
 #include "kan_algorithm.hpp"
 
 template <class T>
