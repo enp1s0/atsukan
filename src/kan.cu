@@ -8,7 +8,7 @@
 #include "kan.hpp"
 #include "kan_algorithm.hpp"
 
-namespace {
+namespace{
 template <class T>
 std::unique_ptr<kan_algorithm::kan_module<T>> get_kan_algorithm(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id){
 	kan_algorithm::kan_module<T>* ptr = nullptr;
