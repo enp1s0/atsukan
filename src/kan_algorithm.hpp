@@ -2,8 +2,9 @@
 #define __KAN_MODULE_HPP__
 #include <vector>
 
-namespace kan_module{
-class module{
+namespace kan_algorithm{
+class kan_module{
+protected:
 	int gpu_id;
 	int num_sm;
 	int num_cuda_core_per_sm;
