@@ -3,6 +3,7 @@
 #include <vector>
 
 namespace kan_algorithm{
+template <class T>
 class kan_module{
 protected:
 	int gpu_id;
