@@ -9,7 +9,7 @@ kan_algorithm::gemm<T>::gemm(const int gpu_id) : kan_algorithm::kan_module<T>(gp
 template <class T>
 void kan_algorithm::gemm<T>::run(const int C, std::vector<int> parameters){
 	// 席を計算する行列の大きさ N x N
-	std::size_t N = 1 << 12;
+	const std::size_t N = parameters[0];
 
 	auto dA = cutf::cuda::memory::get_device_unique_ptr<T>(N * N);
 	auto dB = cutf::cuda::memory::get_device_unique_ptr<T>(N * N);
