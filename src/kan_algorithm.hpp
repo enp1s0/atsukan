@@ -15,6 +15,14 @@ public:
 	// 燗アルゴリズムの実行
 	virtual void run(const int C, std::vector<int>& parameters) = 0;
 };
+
+// gemm module
+template <class T>
+class gemm : public kan_module<T>{
+public:
+	gemm(const int gpu_id);
+	void run(const int C, std::vector<int>& parameters);
+};
 } // kan_module
 
 #endif // __KAN_MODULE_HPP__
