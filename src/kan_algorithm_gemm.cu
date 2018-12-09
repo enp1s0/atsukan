@@ -31,3 +31,6 @@ void kan_algorithm::gemm<T>::run(const int C, std::vector<int> parameters){
 				), __FILE__, __LINE__, __func__);
 	}
 }
+
+template class kan_algorithm::gemm<float>;
+template class kan_algorithm::gemm<double>;
