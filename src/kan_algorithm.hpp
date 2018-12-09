@@ -4,13 +4,13 @@
 
 namespace kan_algorithm{
 template <class T>
-class kan_module{
-protected:
+class kan_base{
+private:
 	int gpu_id;
 	int num_sm;
 	int num_cuda_core_per_sm;
 public:
-	kan_module(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : gpu_id(gpu_id), num_sm(num_sm), num_cuda_core_per_sm(num_cuda_core_per_sm){}
+	kan_base(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : gpu_id(gpu_id), num_sm(num_sm), num_cuda_core_per_sm(num_cuda_core_per_sm){}
 
 	// 燗アルゴリズムの実行
 	// C : 計算回数を制御する変数．最適化実行時は値を小さくして評価を行う．
@@ -20,7 +20,7 @@ public:
 
 // gemm module
 template <class T>
-class gemm : public kan_module<T>{
+class gemm : public kan_base<T>{
 public:
 	gemm(const int gpu_id);
 	void run(const int C, std::vector<int> parameters);
@@ -28,7 +28,7 @@ public:
 
 // julia module
 template <class T>
-class julia : public kan_module<T>{
+class julia : public kan_base<T>{
 public:
 	julia(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm);
 	void run(const int C, std::vector<int> parameters);
