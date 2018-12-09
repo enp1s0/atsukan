@@ -25,6 +25,14 @@ public:
 	gemm(const int gpu_id);
 	void run(const int C, std::vector<int> parameters);
 };
+
+// julia module
+template <class T>
+class julia : public kan_module<T>{
+public:
+	julia(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm);
+	void run(const int C, std::vector<int> parameters);
+};
 } // kan_module
 
 #endif // __KAN_MODULE_HPP__
