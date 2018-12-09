@@ -11,16 +11,16 @@
 namespace{
 template <class T>
 std::unique_ptr<kan_algorithm::kan_base<T>> get_kan_algorithm(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id){
-	kan_algorithm::kan_base<T>* ptr = nullptr;
+	kan_algorithm::kan_base<T>* kan_algorithm_ptr = nullptr;
 	switch (algorithm_id) {
 	case kan::algorithm_id::gemm:
-		ptr = new kan_algorithm::gemm<T>(gpu_id);
+		kan_algorithm_ptr = new kan_algorithm::gemm<T>(gpu_id);
 	case kan::algorithm_id::julia:
-		ptr = new kan_algorithm::julia<T>(gpu_id, num_sm, num_cuda_core_per_sm);
+		kan_algorithm_ptr = new kan_algorithm::julia<T>(gpu_id, num_sm, num_cuda_core_per_sm);
 	default:
 		; // 世界で一番簡単な文
 	}
-	return std::unique_ptr<kan_algorithm::kan_base<T>>{ptr};
+	return std::unique_ptr<kan_algorithm::kan_base<T>>{kan_algorithm_ptr};
 }
 }
 
