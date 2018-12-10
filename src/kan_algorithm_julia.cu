@@ -35,10 +35,10 @@ void kan_algorithm::julia<T>::run(const int C, std::vector<int> parameters){
 	const std::size_t dim = parameters[0];
 	const std::size_t block_size = parameters[1];
 
+	// memory
 	auto d_output = cutf::cuda::memory::get_device_unique_ptr<T>(dim * dim);
 	auto h_output = cutf::cuda::memory::get_host_unique_ptr<T>(dim * dim);
 
-	// memory
 	for(auto c = decltype(C)(0); c < C; c++){
 		kernel_julia<T><<<((dim*dim + block_size - 1)/block_size), block_size>>>(d_output.get(), dim);
 	}
