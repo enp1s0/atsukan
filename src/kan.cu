@@ -31,7 +31,7 @@ void kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm
 	// start kan thread {{{
 	bool kan_complete = false;
 	auto kan_algorithm = get_kan_algorithm<T>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id);
-	std::thread kan_thread([&kan_algorithm](){kan_algorithm.get()->run(3, {1024});});
+	std::thread kan_thread([&kan_algorithm, &kan_complete](){kan_algorithm.get()->run(1<<12, {1<<13, 512}); kan_complete = true;});
 	// }}}
 
 	// monitoring GPU {{{
