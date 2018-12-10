@@ -15,8 +15,10 @@ std::unique_ptr<kan_algorithm::kan_base<T>> get_kan_algorithm(const int gpu_id, 
 	switch (algorithm_id) {
 	case kan::algorithm_id::gemm:
 		kan_algorithm_ptr = new kan_algorithm::gemm<T>(gpu_id);
+		break;
 	case kan::algorithm_id::julia:
 		kan_algorithm_ptr = new kan_algorithm::julia<T>(gpu_id, num_sm, num_cuda_core_per_sm);
+		break;
 	default:
 		; // 世界で一番簡単な文
 	}
