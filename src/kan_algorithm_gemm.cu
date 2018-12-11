@@ -7,7 +7,7 @@ template <class T>
 kan_algorithm::gemm<T>::gemm(const int gpu_id) : kan_algorithm::kan_base<T>(gpu_id, 0, 0){}
 
 template <class T>
-void kan_algorithm::gemm<T>::run(const int c, std::size_t &current_computing_c, std::vector<int> parameters){
+void kan_algorithm::gemm<T>::run(const std::size_t c, std::size_t &current_computing_c, std::vector<int> parameters){
 	// 席を計算する行列の大きさ N x N
 	const std::size_t N = parameters[0];
 
