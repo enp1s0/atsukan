@@ -15,7 +15,7 @@ public:
 	// 燗アルゴリズムの実行
 	// c : 計算回数を制御する変数．最適化実行時は値を小さくして評価を行う．
 	// parameters : ハイパーパラメータ．最適化ではこれをいじる．
-	virtual void run(const std::size_t c, std::size_t &current_computing_c, std::vector<int> parameters) = 0;
+	virtual void run(const bool& complete, std::vector<int> parameters) = 0;
 };
 
 // gemm module
@@ -24,7 +24,7 @@ class gemm : public kan_base<T>{
 public:
 	gemm(const int gpu_id);
 	// parameters[0] : 行列サイズ N (N x N)
-	void run(const std::size_t c, std::size_t& current_computing_c, std::vector<int> parameters);
+	void run(const bool& complete, std::vector<int> parameters);
 };
 
 // julia module
@@ -35,10 +35,10 @@ public:
 	// parameters[0] : 領域サイズdim (dim x dim)
 	// parameters[1] : gridサイズ
 	// parameters[2] : blockサイズ
-	void run(const std::size_t c, std::size_t& current_computing_c, std::vector<int> parameters);
+	void run(const bool& complete, std::vector<int> parameters);
 };
 
-// n-body
+// n-body module
 template <class T>
 class n_body : public kan_base<T>{
 public:
@@ -46,7 +46,7 @@ public:
 	// parameters[0] : 星の数
 	// parameters[1] : gridサイズ
 	// parameters[2] : blockサイズ
-	void run(const std::size_t c, std::size_t& current_computing_c, std::vector<int> parameters);
+	void run(const bool& complete, std::vector<int> parameters);
 };
 } // kan_module
 

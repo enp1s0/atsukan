@@ -31,7 +31,7 @@ template <class T>
 kan_algorithm::julia<T>::julia(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : kan_algorithm::kan_base<T>(gpu_id, num_sm, num_cuda_core_per_sm){}
 
 template <class T>
-void kan_algorithm::julia<T>::run(const std::size_t c, std::size_t &current_computing_c, std::vector<int> parameters){
+void kan_algorithm::julia<T>::run(const bool& complete, std::vector<int> parameters){
 	const std::size_t dim = parameters[0];
 	const std::size_t block_size = parameters[1];
 
@@ -39,7 +39,7 @@ void kan_algorithm::julia<T>::run(const std::size_t c, std::size_t &current_comp
 	auto d_output = cutf::cuda::memory::get_device_unique_ptr<T>(dim * dim);
 	auto h_output = cutf::cuda::memory::get_host_unique_ptr<T>(dim * dim);
 
-	for(current_computing_c = 0; current_computing_c < c; current_computing_c++){
+	while(!complete){
 		kernel_julia<T><<<((dim*dim + block_size - 1)/block_size), block_size>>>(d_output.get(), dim);
 	}
 }

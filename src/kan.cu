@@ -30,14 +30,12 @@ std::unique_ptr<kan_algorithm::kan_base<T>> get_kan_algorithm(const int gpu_id, 
 }
 
 template <class T>
-double kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_c){
+double kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time){
 	// start kan thread {{{
-	// 現在の計算量
-	std::size_t current_computing_c = 0;
 	bool kan_complete = false;
 	auto kan_algorithm = get_kan_algorithm<T>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id);
 	// 関数を抜けたら完了フラグを立てる
-	std::thread kan_thread([&kan_algorithm, &kan_complete, &current_computing_c, &computing_c](){kan_algorithm.get()->run(computing_c, current_computing_c, {1<<13, 512}); kan_complete = true;});
+	std::thread kan_thread([&kan_algorithm, &kan_complete](){kan_algorithm.get()->run(kan_complete, {1<<13, 512}); std::cout<<"done"<<std::endl;});
 	// }}}
 
 	// monitoring GPU {{{
@@ -46,27 +44,23 @@ double kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_
 	if(string_mode_id != gpu_monitor::none){
 		if(string_mode_id == gpu_monitor::csv){
 			std::cerr<<"elapsed_time,";
-			std::cerr<<"current_computing_count,";
-			std::cerr<<"computing_count,";
 		}
 		std::cerr<<gpu_monitor.get_gpu_status_pre_string(string_mode_id)<<std::endl;
 	}
-	while(!kan_complete){
+	for(std::size_t time = 0; time < computing_time; time++){
 		const auto elapsed_time = std::time(nullptr) - start_timestamp;
 		gpu_monitor.get_gpu_status();
 		if(string_mode_id != gpu_monitor::none){
 			if(string_mode_id == gpu_monitor::csv){
 				std::cout<<elapsed_time<<",";
-				std::cout<<current_computing_c<<",";
-				std::cout<<computing_c<<",";
 			}else{
 				std::cout<<"["<<std::setw(6)<<elapsed_time<<"] ";
-				std::cout<<"["<<std::setw(6)<<(current_computing_c + 1)<<"/"<<computing_c<<"]";
 			}
 			std::cout<<gpu_monitor.get_gpu_status_string(string_mode_id)<<std::endl;
 			sleep(1);
 		}
 	}
+	kan_complete = true;
 	// }}}
 	kan_thread.join();
 
