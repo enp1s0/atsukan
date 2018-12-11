@@ -29,9 +29,12 @@ std::unique_ptr<kan_algorithm::kan_base<T>> get_kan_algorithm(const int gpu_id, 
 template <class T>
 void kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id){
 	// start kan thread {{{
+	// 現在の計算量
+	std::size_t current_computing_n = 0;
 	bool kan_complete = false;
 	auto kan_algorithm = get_kan_algorithm<T>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id);
-	std::thread kan_thread([&kan_algorithm, &kan_complete](){kan_algorithm.get()->run(1<<12, {1<<13, 512}); kan_complete = true;});
+	// 関数を抜けたら完了フラグを立てる
+	std::thread kan_thread([&kan_algorithm, &kan_complete, &current_computing_n](){kan_algorithm.get()->run(1<<12, current_computing_n, {1<<13, 512}); kan_complete = true;});
 	// }}}
 
 	// monitoring GPU {{{
