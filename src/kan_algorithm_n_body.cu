@@ -17,6 +17,7 @@ __global__ void n_body_compute_velosity_kernel(
 			T* const vy,
 			T* const vz,
 			T* m,
+			const T dt,
 			const std::size_t N
 		){
 	const auto tid = blockIdx.x * blockDim.x + threadIdx.x;
@@ -42,9 +43,9 @@ __global__ void n_body_compute_velosity_kernel(
 		reg_fy += f * ry;
 		reg_fz += f * rz;
 	}
-	vx[tid] = reg_fx / reg_m;
-	vy[tid] = reg_fy / reg_m;
-	vz[tid] = reg_fz / reg_m;
+	vx[tid] += reg_fx / reg_m * dt;
+	vy[tid] += reg_fy / reg_m * dt;
+	vz[tid] += reg_fz / reg_m * dt;
 }
 template <class T>
 __global__ void n_body_compute_position_kernel(
@@ -54,13 +55,14 @@ __global__ void n_body_compute_position_kernel(
 			T* const vx,
 			T* const vy,
 			T* const vz,
+			const T dt,
 			const std::size_t N
 		){
 	const auto tid = blockIdx.x * blockDim.x + threadIdx.x;
 	if(tid >= N) return;
-	px[tid] += __ldg(vx + tid);
-	py[tid] += __ldg(vy + tid);
-	pz[tid] += __ldg(vz + tid);
+	px[tid] += __ldg(vx + tid) * dt;
+	py[tid] += __ldg(vy + tid) * dt;
+	pz[tid] += __ldg(vz + tid) * dt;
 }
 }
 
@@ -71,6 +73,7 @@ template <class T>
 void kan_algorithm::n_body<T>::run(const std::size_t c, std::size_t &current_computing_c, std::vector<int> parameters){
 	const std::size_t N = parameters[0];
 	const std::size_t block_size = parameters[1];
+	const T dt = static_cast<T>(0.001);
 
 	auto d_px = cutf::cuda::memory::get_device_unique_ptr<T>(N);
 	auto d_py = cutf::cuda::memory::get_device_unique_ptr<T>(N);
@@ -89,6 +92,7 @@ void kan_algorithm::n_body<T>::run(const std::size_t c, std::size_t &current_com
 				d_vy.get(),
 				d_vz.get(),
 				d_m.get(),
+				dt,
 				N
 				);
 		n_body_compute_position_kernel<T><<<(N + block_size - 1)/block_size, block_size>>>(
@@ -98,6 +102,7 @@ void kan_algorithm::n_body<T>::run(const std::size_t c, std::size_t &current_com
 				d_vx.get(),
 				d_vy.get(),
 				d_vz.get(),
+				dt,
 				N
 				);
 	}
