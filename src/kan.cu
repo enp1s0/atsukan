@@ -43,32 +43,42 @@ void kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm
 	// monitoring GPU {{{
 	gpu_monitor::monitor gpu_monitor(gpu_id);
 	const auto start_timestamp = std::time(nullptr);
-	if(string_mode_id == gpu_monitor::csv){
-		std::cerr<<"elapsed_time,";
-		std::cerr<<"current_computing_count,";
-		std::cerr<<"computing_count,";
+	if(string_mode_id != gpu_monitor::none){
+		if(string_mode_id == gpu_monitor::csv){
+			std::cerr<<"elapsed_time,";
+			std::cerr<<"current_computing_count,";
+			std::cerr<<"computing_count,";
+		}
+		std::cerr<<gpu_monitor.get_gpu_status_pre_string(string_mode_id)<<std::endl;
 	}
-	std::cerr<<gpu_monitor.get_gpu_status_pre_string(string_mode_id)<<std::endl;
 	while(!kan_complete){
 		const auto elapsed_time = std::time(nullptr) - start_timestamp;
-		if(string_mode_id == gpu_monitor::csv){
-			std::cout<<elapsed_time<<",";
-			std::cout<<current_computing_c<<",";
-			std::cout<<computing_c<<",";
-		}else{
-			std::cout<<"["<<std::setw(6)<<elapsed_time<<"] ";
-			std::cout<<"["<<std::setw(6)<<(current_computing_c + 1)<<"/"<<computing_c<<"]";
+		gpu_monitor.get_gpu_status();
+		if(string_mode_id != gpu_monitor::none){
+			if(string_mode_id == gpu_monitor::csv){
+				std::cout<<elapsed_time<<",";
+				std::cout<<current_computing_c<<",";
+				std::cout<<computing_c<<",";
+			}else{
+				std::cout<<"["<<std::setw(6)<<elapsed_time<<"] ";
+				std::cout<<"["<<std::setw(6)<<(current_computing_c + 1)<<"/"<<computing_c<<"]";
+			}
+			std::cout<<gpu_monitor.get_gpu_status_string(string_mode_id)<<std::endl;
+			sleep(1);
 		}
-		std::cout<<gpu_monitor.get_gpu_status_string(string_mode_id)<<std::endl;
-		sleep(1);
 	}
 	// }}}
 	kan_thread.join();
 
-	std::cerr<<std::endl;
-	std::cerr<<"# Result"<<std::endl
-		<<"  - max temperature      : "<<gpu_monitor.get_max_temperature()<<"C"<<std::endl
-		<<"  - max power            : "<<(gpu_monitor.get_max_power()/1000.0)<<"W"<<std::endl;
+	const auto max_power = gpu_monitor.get_max_power()/1000.0;
+	if(string_mode_id != gpu_monitor::none){
+		const auto max_temperature = gpu_monitor.get_max_temperature();
+		std::cerr<<std::endl;
+		std::cerr<<"# Result"<<std::endl
+			<<"  - max temperature      : "<<max_temperature<<"C"<<std::endl
+			<<"  - max power            : "<<max_power<<"W"<<std::endl;
+	}
+
 }
 
 template void kan::run<float>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t);
