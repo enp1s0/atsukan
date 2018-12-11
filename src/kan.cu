@@ -19,6 +19,9 @@ std::unique_ptr<kan_algorithm::kan_base<T>> get_kan_algorithm(const int gpu_id, 
 	case kan::algorithm_id::julia:
 		kan_algorithm_ptr = new kan_algorithm::julia<T>(gpu_id, num_sm, num_cuda_core_per_sm);
 		break;
+	case kan::algorithm_id::n_body:
+		kan_algorithm_ptr = new kan_algorithm::n_body<T>(gpu_id, num_sm, num_cuda_core_per_sm);
+		break;
 	default:
 		; // 世界で一番簡単な文
 	}

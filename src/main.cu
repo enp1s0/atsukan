@@ -11,6 +11,7 @@ namespace{
 kan::algorithm_id get_algorithm_id(const std::string algorithm_name){
 	if(algorithm_name == "julia") return kan::algorithm_id::julia;
 	if(algorithm_name == "gemm") return kan::algorithm_id::gemm;
+	if(algorithm_name == "n_body") return kan::algorithm_id::n_body;
 	throw std::runtime_error("No such an algorithm : " + algorithm_name);
 }
 gpu_monitor::string_mode_id get_string_mode_id(const std::string string_mode_name){
