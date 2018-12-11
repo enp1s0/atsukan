@@ -42,7 +42,8 @@ void kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm
 	const auto start_timestamp = std::time(nullptr);
 	if(string_mode_id == gpu_monitor::csv){
 		std::cerr<<"elapsed_time,";
-		std::cerr<<"current_computing,";
+		std::cerr<<"current_computing_count,";
+		std::cerr<<"computing_count,";
 	}
 	std::cerr<<gpu_monitor.get_gpu_status_pre_string(string_mode_id)<<std::endl;
 	while(!kan_complete){
@@ -50,6 +51,7 @@ void kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm
 		if(string_mode_id == gpu_monitor::csv){
 			std::cout<<elapsed_time<<",";
 			std::cout<<current_computing_c<<",";
+			std::cout<<computing_c<<",";
 		}else{
 			std::cout<<"["<<std::setw(6)<<elapsed_time<<"] ";
 			std::cout<<"["<<std::setw(6)<<(current_computing_c + 1)<<"/"<<computing_c<<"]";
