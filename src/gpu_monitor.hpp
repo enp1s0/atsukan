@@ -6,7 +6,8 @@
 namespace gpu_monitor{
 enum string_mode_id{
 	human,
-	csv
+	csv,
+	none
 };
 class monitor{
 	nvmlDevice_t device;
@@ -15,11 +16,18 @@ class monitor{
 	// max value
 	unsigned int max_power;
 	unsigned int max_temperature;
+
+	// current value
+	unsigned int current_temperature;
+	unsigned int current_power;
+	nvmlPstates_t current_states;
 public:
 	monitor(unsigned int gpu_id);
 	~monitor();
 	std::string get_gpu_status_string(const string_mode_id string_mode);
 	std::string get_gpu_status_pre_string(const string_mode_id string_mode);
+
+	void get_gpu_status();
 
 	// max value getter
 	unsigned int get_max_temperature() const;
