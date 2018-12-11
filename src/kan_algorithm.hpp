@@ -37,6 +37,17 @@ public:
 	// parameters[2] : blockサイズ
 	void run(const std::size_t c, std::size_t& current_computing_c, std::vector<int> parameters);
 };
+
+// n-body
+template <class T>
+class n_body : public kan_base<T>{
+public:
+	n_body(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm);
+	// parameters[0] : 星の数
+	// parameters[1] : gridサイズ
+	// parameters[2] : blockサイズ
+	void run(const std::size_t c, std::size_t& current_computing_c, std::vector<int> parameters);
+};
 } // kan_module
 
 #endif // __KAN_MODULE_HPP__
