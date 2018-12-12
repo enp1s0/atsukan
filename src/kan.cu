@@ -34,7 +34,7 @@ double kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_
 	try{
 		// start kan thread {{{
 		bool kan_complete = false;
-		auto kan_algorithm = get_kan_algorithm<T>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id);
+		const auto kan_algorithm = get_kan_algorithm<T>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id);
 		std::thread kan_thread([&kan_algorithm, &kan_complete, &run_arguments](){kan_algorithm.get()->run(kan_complete, run_arguments); std::cout<<"done"<<std::endl;});
 		// }}}
 
