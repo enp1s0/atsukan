@@ -37,6 +37,7 @@ int main(int argc, char** argv){
 		("a,algorithm", "Computing algorithm", cxxopts::value<std::string>()->default_value("julia"))
 		("g,gpu", "GPU ID", cxxopts::value<unsigned int>()->default_value("0"))
 		("p,print_mode", "Printig mdoe", cxxopts::value<std::string>()->default_value("human"))
+		("s,second", "Heating time[s]", cxxopts::value<std::size_t>()->default_value("5"))
 		("t,type", "Computing type", cxxopts::value<std::string>()->default_value("float"))
 		("h,help", "Help");
 	const auto args = options.parse(argc, argv);
@@ -77,10 +78,12 @@ int main(int argc, char** argv){
 	const auto type_name = args["type"].as<std::string>();
 	const auto algorithm_id = get_algorithm_id(algorithm_name);
 	const auto run_function = get_run_function(type_name);
+	const auto execution_time = args["second"].as<std::size_t>();
 	std::cerr
-		<<"# Algorithm information"<<std::endl
+		<<"# Execution information"<<std::endl
 		<<"  - Algorithm name       : "<<algorithm_name<<std::endl
-		<<"  - Computing type       : "<<type_name<<std::endl;
+		<<"  - Computing type       : "<<type_name<<std::endl
+		<<"  - Execution Time       : "<<execution_time<<" [s]"<<std::endl;
 	std::cerr<<std::endl;
 	// }}}
 	
@@ -95,6 +98,6 @@ int main(int argc, char** argv){
 	// }
 	
 	// run {{{
-	run_function(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id, string_mode_id, 1 << 15);
+	run_function(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id, string_mode_id, execution_time);
 	// }}}
 }
