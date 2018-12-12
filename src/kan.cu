@@ -30,12 +30,12 @@ std::unique_ptr<kan_algorithm::kan_base<T>> get_kan_algorithm(const int gpu_id, 
 }
 
 template <class T>
-double kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time){
+double kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time, std::vector<int> run_arguments){
 	// start kan thread {{{
 	bool kan_complete = false;
 	auto kan_algorithm = get_kan_algorithm<T>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id);
 	// 関数を抜けたら完了フラグを立てる
-	std::thread kan_thread([&kan_algorithm, &kan_complete](){kan_algorithm.get()->run(kan_complete, {1<<13, 512}); std::cout<<"done"<<std::endl;});
+	std::thread kan_thread([&kan_algorithm, &kan_complete, &run_arguments](){kan_algorithm.get()->run(kan_complete, run_arguments); std::cout<<"done"<<std::endl;});
 	// }}}
 
 	// monitoring GPU {{{
@@ -76,6 +76,7 @@ double kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_
 	return max_power;
 }
 
-template double kan::run<float>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t);
-template double kan::run<double>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t);
+
+template double kan::run<float>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>);
+template double kan::run<double>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>);
 // instance
