@@ -76,7 +76,12 @@ double kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_
 	return max_power;
 }
 
+template <class T>
+void kan::optimize(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time){
+}
 
 template double kan::run<float>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>);
 template double kan::run<double>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>);
+template void kan::optimize<float>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t);
+template void kan::optimize<double>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t);
 // instance
