@@ -51,7 +51,7 @@ std::string gpu_monitor::monitor::get_gpu_status_string(const gpu_monitor::strin
 	std::string status_string = "";
 	if(string_mode == gpu_monitor::human){
 		std::stringstream ss;
-		ss<<"Temp:"<<std::setw(3)<<current_temperature<<"C, Pow:"<<std::setw(5)<<(current_power/1000.0)<<"W, Perf :P" + std::to_string((int) current_states);
+		ss<<"Temp: "<<std::setw(3)<<current_temperature<<"C, Pow: "<<std::setw(6)<<(current_power/1000.0)<<"W, Perf: P" + std::to_string((int) current_states);
 		status_string = ss.str();
 	}else if(string_mode == gpu_monitor::csv){
 		status_string = std::to_string(current_temperature) + "," + std::to_string(current_power/1000.0) + "," + std::to_string(power_max_limit/1000.0);
