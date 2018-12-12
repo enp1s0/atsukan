@@ -4,7 +4,9 @@
 #include "kan_algorithm.hpp"
 
 template <class T>
-kan_algorithm::gemm<T>::gemm(const int gpu_id) : kan_algorithm::kan_base<T>(gpu_id, 0, 0){}
+kan_algorithm::gemm<T>::gemm(const int gpu_id) : kan_algorithm::kan_base<T>(gpu_id, 0, 0){
+	kan_algorithm::kan_base<T>::arg_ranges.push_back({"N (matrix size)", (1<<5), (1<<14), [](const hyperparameter::parameter_t a){return 2 * a;}});
+}
 
 template <class T>
 void kan_algorithm::gemm<T>::run(const bool &complete, std::vector<int> parameters){

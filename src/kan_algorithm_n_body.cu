@@ -67,7 +67,10 @@ __global__ void n_body_compute_position_kernel(
 }
 
 template <class T>
-kan_algorithm::n_body<T>::n_body(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : kan_algorithm::kan_base<T>(gpu_id, num_sm, num_cuda_core_per_sm){}
+kan_algorithm::n_body<T>::n_body(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : kan_algorithm::kan_base<T>(gpu_id, num_sm, num_cuda_core_per_sm){
+	kan_algorithm::kan_base<T>::arg_ranges.push_back({"n (body size)", (1<<5), (1<<16), [](const hyperparameter::parameter_t a){return 2 * a;}});
+	kan_algorithm::kan_base<T>::arg_ranges.push_back({"threads per a block", (1<<5), (1<<10), [](const hyperparameter::parameter_t a){return 2 * a;}});
+}
 
 template <class T>
 void kan_algorithm::n_body<T>::run(const bool& complete, std::vector<int> parameters){
