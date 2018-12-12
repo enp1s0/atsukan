@@ -11,6 +11,7 @@ private:
 	int num_sm;
 	int num_cuda_core_per_sm;
 public:
+	std::vector<hyperparameter::range> arg_ranges;
 	kan_base(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : gpu_id(gpu_id), num_sm(num_sm), num_cuda_core_per_sm(num_cuda_core_per_sm){}
 
 	// 燗アルゴリズムの実行
