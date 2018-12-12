@@ -105,6 +105,7 @@ void kan_algorithm::n_body<T>::run(const bool& complete, std::vector<int> parame
 				dt,
 				N
 				);
+		cudaDeviceSynchronize();
 	}
 	cutf::cuda::error::check(cudaGetLastError(), __FILE__, __LINE__, __func__);
 }

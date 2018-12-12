@@ -41,6 +41,7 @@ void kan_algorithm::julia<T>::run(const bool& complete, std::vector<int> paramet
 
 	while(!complete){
 		kernel_julia<T><<<((dim*dim + block_size - 1)/block_size), block_size>>>(d_output.get(), dim);
+		cudaDeviceSynchronize();
 	}
 }
 

@@ -29,6 +29,7 @@ void kan_algorithm::gemm<T>::run(const bool &complete, std::vector<int> paramete
 				&beta,
 				dC.get(), N
 				), __FILE__, __LINE__, __func__);
+		cudaDeviceSynchronize();
 	}
 }
 
