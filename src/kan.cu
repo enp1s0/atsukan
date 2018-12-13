@@ -27,14 +27,11 @@ std::unique_ptr<kan_algorithm::kan_base<T>> get_kan_algorithm(const int gpu_id, 
 	}
 	return std::unique_ptr<kan_algorithm::kan_base<T>>{kan_algorithm_ptr};
 }
-}
-
 template <class T>
-double kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time, std::vector<int> run_arguments){
+double run_core(const int gpu_id, const std::unique_ptr<kan_algorithm::kan_base<T>> &kan_algorithm, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time, const std::vector<int>& run_arguments){
 	try{
 		// start kan thread {{{
 		bool kan_complete = false;
-		const auto kan_algorithm = get_kan_algorithm<T>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id);
 		std::thread kan_thread([&kan_algorithm, &kan_complete, &run_arguments](){kan_algorithm.get()->run(kan_complete, run_arguments); std::cout<<"done"<<std::endl;});
 		// }}}
 
@@ -77,6 +74,13 @@ double kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_
 	}
 
 
+}
+} // noname namespace
+
+template <class T>
+double kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time, std::vector<int> run_arguments){
+	const auto kan_algorithm = get_kan_algorithm<T>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id);
+	return run_core<T>(gpu_id, kan_algorithm, string_mode_id, computing_time, run_arguments);
 }
 
 template <class T>
