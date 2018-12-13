@@ -127,10 +127,12 @@ void kan::optimize(const int gpu_id, const int num_sm, const int num_cuda_core_p
 		params.push_back(p.min);
 	}
 	do{
+		// 燗関数を実行
+		const auto max_power = run_core<T>(gpu_id, kan_algorithm, gpu_monitor::string_mode_id::none, computing_time, params);
 		for(const auto& p : params){
 			std::cout<<p<<",";
 		}
-		std::cout<<std::endl;
+		std::cout<<max_power<<std::endl;
 	}while(! update_hyperparameter(params, parameter_ranges));
 }
 
