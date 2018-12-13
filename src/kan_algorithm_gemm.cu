@@ -4,9 +4,7 @@
 #include "kan_algorithm.hpp"
 
 template <class T>
-kan_algorithm::gemm<T>::gemm(const int gpu_id) : kan_algorithm::kan_base<T>(gpu_id, 0, 0){
-	kan_algorithm::kan_base<T>::arg_ranges.push_back({"N (matrix size)", (1<<5), (1<<14), [](const hyperparameter::parameter_t a){return 2 * a;}});
-}
+kan_algorithm::gemm<T>::gemm(const int gpu_id) : kan_algorithm::kan_base<T>(gpu_id, 0, 0){}
 
 template <class T>
 void kan_algorithm::gemm<T>::run(const bool &complete, std::vector<int> parameters){
@@ -35,5 +33,14 @@ void kan_algorithm::gemm<T>::run(const bool &complete, std::vector<int> paramete
 	}
 }
 
+template <class T>
+std::vector<hyperparameter::range> kan_algorithm::gemm<T>::get_hyperparameter_ranges() const{
+	return {
+		{"N (matrix size N x N)", 1<<6, 1<<15, [](hyperparameter::parameter_t a){return a * 2;}}
+	};
+}
+
 template class kan_algorithm::gemm<float>;
 template class kan_algorithm::gemm<double>;
+
+

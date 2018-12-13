@@ -28,10 +28,7 @@ __global__ void kernel_julia(T* const output, const std::size_t dim){
 }
 
 template <class T>
-kan_algorithm::julia<T>::julia(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : kan_algorithm::kan_base<T>(gpu_id, num_sm, num_cuda_core_per_sm){
-	kan_algorithm::kan_base<T>::arg_ranges.push_back({"dim (field size : dim x dim)", (1<<5), (1<<14), [](const hyperparameter::parameter_t a){return 2 * a;}});
-	kan_algorithm::kan_base<T>::arg_ranges.push_back({"threads per a block", (1<<5), (1<<10), [](const hyperparameter::parameter_t a){return 2 * a;}});
-}
+kan_algorithm::julia<T>::julia(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : kan_algorithm::kan_base<T>(gpu_id, num_sm, num_cuda_core_per_sm){}
 
 template <class T>
 void kan_algorithm::julia<T>::run(const bool& complete, std::vector<int> parameters){
@@ -47,6 +44,15 @@ void kan_algorithm::julia<T>::run(const bool& complete, std::vector<int> paramet
 		cudaDeviceSynchronize();
 	}
 }
+
+template <class T>
+std::vector<hyperparameter::range> kan_algorithm::julia<T>::get_hyperparameter_ranges() const{
+	return {
+		{"dim (field size : dim x dim)", 1<<7, 1<<12, [](hyperparameter::parameter_t a){return a + 128;}},
+		{"block_size", 1<<6, 1<<10, [](hyperparameter::parameter_t a){return a * 2;}}
+	};
+}
+
 
 template class kan_algorithm::julia<float>;
 template class kan_algorithm::julia<double>;

@@ -11,13 +11,13 @@ private:
 	int num_sm;
 	int num_cuda_core_per_sm;
 public:
-	std::vector<hyperparameter::range> arg_ranges;
 	kan_base(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : gpu_id(gpu_id), num_sm(num_sm), num_cuda_core_per_sm(num_cuda_core_per_sm){}
 
 	// 燗アルゴリズムの実行
 	// c : 計算回数を制御する変数．最適化実行時は値を小さくして評価を行う．
 	// parameters : ハイパーパラメータ．最適化ではこれをいじる．
 	virtual void run(const bool& complete, std::vector<hyperparameter::parameter_t> parameters) = 0;
+	virtual std::vector<hyperparameter::range> get_hyperparameter_ranges() const = 0;
 };
 
 // gemm module
@@ -27,6 +27,7 @@ public:
 	gemm(const int gpu_id);
 	// parameters[0] : 行列サイズ N (N x N)
 	void run(const bool& complete, std::vector<hyperparameter::parameter_t> parameters);
+	std::vector<hyperparameter::range> get_hyperparameter_ranges() const;
 };
 
 // julia module
@@ -38,6 +39,7 @@ public:
 	// parameters[1] : gridサイズ
 	// parameters[2] : blockサイズ
 	void run(const bool& complete, std::vector<hyperparameter::parameter_t> parameters);
+	std::vector<hyperparameter::range> get_hyperparameter_ranges() const;
 };
 
 // n-body module
@@ -49,6 +51,7 @@ public:
 	// parameters[1] : gridサイズ
 	// parameters[2] : blockサイズ
 	void run(const bool& complete, std::vector<hyperparameter::parameter_t> parameters);
+	std::vector<hyperparameter::range> get_hyperparameter_ranges() const;
 };
 } // kan_module
 

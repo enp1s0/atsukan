@@ -67,10 +67,7 @@ __global__ void n_body_compute_position_kernel(
 }
 
 template <class T>
-kan_algorithm::n_body<T>::n_body(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : kan_algorithm::kan_base<T>(gpu_id, num_sm, num_cuda_core_per_sm){
-	kan_algorithm::kan_base<T>::arg_ranges.push_back({"n (body size)", (1<<5), (1<<16), [](const hyperparameter::parameter_t a){return 2 * a;}});
-	kan_algorithm::kan_base<T>::arg_ranges.push_back({"threads per a block", (1<<5), (1<<10), [](const hyperparameter::parameter_t a){return 2 * a;}});
-}
+kan_algorithm::n_body<T>::n_body(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : kan_algorithm::kan_base<T>(gpu_id, num_sm, num_cuda_core_per_sm){}
 
 template <class T>
 void kan_algorithm::n_body<T>::run(const bool& complete, std::vector<int> parameters){
@@ -111,6 +108,14 @@ void kan_algorithm::n_body<T>::run(const bool& complete, std::vector<int> parame
 		cudaDeviceSynchronize();
 	}
 	cutf::cuda::error::check(cudaGetLastError(), __FILE__, __LINE__, __func__);
+}
+
+template <class T>
+std::vector<hyperparameter::range> kan_algorithm::n_body<T>::get_hyperparameter_ranges() const{
+	return {
+		{"N (N size)", 1<<7, 1<<19, [](hyperparameter::parameter_t a){return a * 2;}},
+		{"block_size", 1<<6, 1<<10, [](hyperparameter::parameter_t a){return a * 2;}}
+	};
 }
 
 template class kan_algorithm::n_body<float>;
