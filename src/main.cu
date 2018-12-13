@@ -87,27 +87,28 @@ int main(int argc, char** argv){
 	const auto execution_time = args["second"].as<std::size_t>();
 	const auto string_mode_name = args["print_mode"].as<std::string>();
 	const auto string_mode_id = get_string_mode_id(string_mode_name);
+	
+	// print algorithm information {{{
+	std::cerr
+		<<"# Execution information"<<std::endl
+		<<"  - Algorithm name       : "<<algorithm_name<<std::endl
+		<<"  - Computing type       : "<<type_name<<std::endl
+		<<"  - Execution Time       : "<<execution_time<<" [s]"<<std::endl;
+	std::cerr<<std::endl;
+	// }}}
+
+	// print output information {{{
+	std::cerr
+		<<"# Output information"<<std::endl
+		<<"  - Output string type   : "<<string_mode_name<<std::endl;
+	std::cerr<<std::endl;
+	// }
 
 	// run {{{
 	if(args.count("opt")){
 		const auto optimize_function = get_optimize_function(type_name);
 		optimize_function(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id, string_mode_id, execution_time);
 	}else{
-		// print algorithm information {{{
-		std::cerr
-			<<"# Execution information"<<std::endl
-			<<"  - Algorithm name       : "<<algorithm_name<<std::endl
-			<<"  - Computing type       : "<<type_name<<std::endl
-			<<"  - Execution Time       : "<<execution_time<<" [s]"<<std::endl;
-		std::cerr<<std::endl;
-		// }}}
-
-		// print output information {{{
-		std::cerr
-			<<"# Output information"<<std::endl
-			<<"  - Output string type   : "<<string_mode_name<<std::endl;
-		std::cerr<<std::endl;
-		// }
 		const auto run_function = get_run_function(type_name);
 		run_function(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id, string_mode_id, execution_time, {1<<13, 256});
 	}
