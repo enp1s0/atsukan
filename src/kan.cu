@@ -121,19 +121,48 @@ void kan::optimize(const int gpu_id, const int num_sm, const int num_cuda_core_p
 	const auto kan_algorithm = get_kan_algorithm<T>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id);
 	const auto parameter_ranges = kan_algorithm.get()->get_hyperparameter_ranges();
 
+	std::vector<hyperparameter::parameter_t> max_params(parameter_ranges.size());
+	double max_power = 0.0;
 	// まず，ハイパーパラメータにそれぞれの最小値をセット
 	std::vector<hyperparameter::parameter_t> params;
 	for(const auto p : parameter_ranges){
 		params.push_back(p.min);
 	}
+	std::size_t experiment_id = 0;
 	do{
 		// 燗関数を実行
-		const auto max_power = run_core<T>(gpu_id, kan_algorithm, gpu_monitor::string_mode_id::none, computing_time, params);
-		for(const auto& p : params){
-			std::cout<<p<<",";
+		const auto power = run_core<T>(gpu_id, kan_algorithm, gpu_monitor::string_mode_id::none, computing_time, params);
+		// CSV形式で結果を表示
+		if(string_mode_id == gpu_monitor::string_mode_id::csv){
+			for(const auto& p : params){
+				std::cout<<p<<",";
+			}
+			std::cout<<power<<std::endl;
 		}
-		std::cout<<max_power<<std::endl;
+		// 人間に優しく表示
+		else if(string_mode_id == gpu_monitor::string_mode_id::human){
+			std::cout<<"## Experiment "<<(experiment_id++)<<std::endl;
+			std::cout<<"    - parameters         : ";
+			for(const auto& p : params){
+				std::cout<<p<<",";
+			}
+			std::cout<<std::endl;
+			std::cout<<"    - power              : "<<power<<"W"<<std::endl;
+		}
+		if(power > max_power){
+			max_power = power;
+			std::copy(params.begin(), params.end(), max_params.begin());
+		}
 	}while(! update_hyperparameter(params, parameter_ranges));
+
+	std::cerr<<"# Optimization result"<<std::endl;
+	std::cout<<"  - best parameters      : ";
+	for(const auto& p : max_params){
+		std::cout<<p<<",";
+	}
+	std::cout<<std::endl;
+	std::cout<<"  - max power            : "<<max_power<<"W"<<std::endl;
+
 }
 
 template double kan::run<float>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>);
