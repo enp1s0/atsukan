@@ -72,8 +72,41 @@ double run_core(const int gpu_id, const std::unique_ptr<kan_algorithm::kan_base<
 	}catch(std::exception&){
 		return 0.0;
 	}
+}
 
-
+// 再帰的にハイパーパラメータの組み合わせを作る
+// 返り値 : hyperparameters[i]がranges[i].maxを超えた場合はranges[i].minに戻る．そうしたらtrue
+// 根っこのupdate_hyperparameterがfalseを返せば全ハイパーパラメータの探索が行われたことになる
+bool update_hyperparameter(std::vector<hyperparameter::parameter_t>& hyperparameters, const std::vector<hyperparameter::range>& ranges, std::size_t index = 0){
+	// 一番外側(?)のパラメータでない場合
+	if(index < ranges.size() - 1){
+		// 1つ外側のパラメータを設定
+		const auto changed = update_hyperparameter(hyperparameters, ranges, index + 1);
+		// 外側が1順していた場合は次のパラメータにする
+		if(changed){
+			const auto next = ranges[index].get_next(hyperparameters[index]);
+			// maxより大きければminに戻しtrueを返す
+			if(next > ranges[index].max){
+				hyperparameters[index] = ranges[index].min;
+				return true;
+			}else{
+				hyperparameters[index] = next;
+				return false;
+			}
+		}else{
+			return false;
+		}
+	}else{
+		const auto next = ranges[index].get_next(hyperparameters[index]);
+		// maxより大きければminに戻しtrueを返す
+		if(next > ranges[index].max){
+			hyperparameters[index] = ranges[index].min;
+			return true;
+		}else{
+			hyperparameters[index] = next;
+			return false;
+		}
+	}
 }
 } // noname namespace
 
@@ -85,6 +118,20 @@ double kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_
 
 template <class T>
 void kan::optimize(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time){
+	const auto kan_algorithm = get_kan_algorithm<T>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id);
+	const auto parameter_ranges = kan_algorithm.get()->get_hyperparameter_ranges();
+
+	// まず，ハイパーパラメータにそれぞれの最小値をセット
+	std::vector<hyperparameter::parameter_t> params;
+	for(const auto p : parameter_ranges){
+		params.push_back(p.min);
+	}
+	do{
+		for(const auto& p : params){
+			std::cout<<p<<",";
+		}
+		std::cout<<std::endl;
+	}while(! update_hyperparameter(params, parameter_ranges));
 }
 
 template double kan::run<float>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>);
