@@ -113,8 +113,8 @@ void kan_algorithm::n_body<T>::run(const bool& complete, std::vector<int> parame
 template <class T>
 std::vector<hyperparameter::range> kan_algorithm::n_body<T>::get_hyperparameter_ranges() const{
 	return {
-		{"N (N size)", 1<<7, 1<<19, [](hyperparameter::parameter_t a){return a * 2;}},
-		{"block_size", 1<<6, 1<<10, [](hyperparameter::parameter_t a){return a * 2;}}
+		{"N", "body size", 1<<7, 1<<19, [](hyperparameter::parameter_t a){return a * 2;}},
+		{"grid_size", "GPU grid size", 1<<6, 1<<10, [](hyperparameter::parameter_t a){return a * 2;}}
 	};
 }
 

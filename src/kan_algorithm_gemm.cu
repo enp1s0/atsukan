@@ -36,7 +36,7 @@ void kan_algorithm::gemm<T>::run(const bool &complete, std::vector<int> paramete
 template <class T>
 std::vector<hyperparameter::range> kan_algorithm::gemm<T>::get_hyperparameter_ranges() const{
 	return {
-		{"N (matrix size N x N)", 1<<6, 1<<11, [](hyperparameter::parameter_t a){return a * 2;}}
+		{"N","matrix size N x N", 1<<6, 1<<11, [](hyperparameter::parameter_t a){return a * 2;}}
 	};
 }
 

@@ -7,6 +7,7 @@ namespace hyperparameter{
 using parameter_t = int;
 struct range{
 	std::string name;
+	std::string description;
 	parameter_t min, max;
 	std::function<parameter_t(parameter_t)> get_next;
 };

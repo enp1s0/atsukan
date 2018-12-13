@@ -48,8 +48,8 @@ void kan_algorithm::julia<T>::run(const bool& complete, std::vector<int> paramet
 template <class T>
 std::vector<hyperparameter::range> kan_algorithm::julia<T>::get_hyperparameter_ranges() const{
 	return {
-		{"dim (field size : dim x dim)", 1<<7, 1<<12, [](hyperparameter::parameter_t a){return a + 128;}},
-		{"block_size", 1<<6, 1<<10, [](hyperparameter::parameter_t a){return a * 2;}}
+		{"dim", "field size : dim x dim", 1<<7, 1<<12, [](hyperparameter::parameter_t a){return a + 128;}},
+		{"grid_size", "GPU grid size", 1<<6, 1<<10, [](hyperparameter::parameter_t a){return a * 2;}}
 	};
 }
 
