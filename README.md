@@ -1,6 +1,5 @@
 ![ATSUKAN LOGO](https://gitlab.momo86.net/mutsuki/atsukan/raw/master/docs/atsukan.svg)
 
-# High Performance Computing for ATSUKAN
 冬ですね．  
 熱燗の時期ですね．  
 GPUで汎用計算をしている者としては自分の計算の熱で熱燗を作るのは夢です．  
