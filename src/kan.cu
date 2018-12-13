@@ -121,6 +121,18 @@ void kan::optimize(const int gpu_id, const int num_sm, const int num_cuda_core_p
 	const auto kan_algorithm = get_kan_algorithm<T>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id);
 	const auto parameter_ranges = kan_algorithm.get()->get_hyperparameter_ranges();
 
+
+	// 範囲を表示
+	if(string_mode_id != gpu_monitor::string_mode_id::none){
+		std::cerr<<"# Hyperparameters information"<<std::endl;
+		for(const auto& p : parameter_ranges){
+			std::cerr<<"  - "<<p.name<<std::endl;
+			std::cerr<<"    - description        : "<<p.description<<std::endl;
+			std::cerr<<"    - range              : "<<p.min<<" ~ "<<p.max<<std::endl;
+		}
+		std::cerr<<std::endl;
+	}
+
 	std::vector<hyperparameter::parameter_t> max_params(parameter_ranges.size());
 	double max_power = 0.0;
 	// まず，ハイパーパラメータにそれぞれの最小値をセット
