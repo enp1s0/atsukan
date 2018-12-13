@@ -167,6 +167,7 @@ void kan::optimize(const int gpu_id, const int num_sm, const int num_cuda_core_p
 		}
 	}while(! update_hyperparameter(params, parameter_ranges));
 
+	std::cerr<<std::endl;
 	std::cerr<<"# Optimization result"<<std::endl;
 	std::cout<<"  - best parameters      : ";
 	for(const auto& p : max_params){
