@@ -32,7 +32,7 @@ double run_core(const int gpu_id, const std::unique_ptr<kan_algorithm::kan_base<
 	try{
 		// start kan thread {{{
 		bool kan_complete = false;
-		std::thread kan_thread([&kan_algorithm, &kan_complete, &run_arguments](){kan_algorithm.get()->run(kan_complete, run_arguments); std::cout<<"done"<<std::endl;});
+		std::thread kan_thread([&kan_algorithm, &kan_complete, &run_arguments](){kan_algorithm.get()->run(kan_complete, run_arguments);});
 		// }}}
 
 		// monitoring GPU {{{
@@ -54,8 +54,8 @@ double run_core(const int gpu_id, const std::unique_ptr<kan_algorithm::kan_base<
 					std::cout<<"["<<std::setw(6)<<elapsed_time<<"] ";
 				}
 				std::cout<<monitor.get_gpu_status_string(string_mode_id)<<std::endl;
-				sleep(1);
 			}
+			sleep(1);
 		}
 		kan_complete = true;
 		// }}}
