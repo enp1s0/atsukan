@@ -32,7 +32,8 @@ double run_core(const int gpu_id, const std::unique_ptr<kan_algorithm::kan_base<
 	try{
 		// start kan thread {{{
 		bool kan_complete = false;
-		std::thread kan_thread([&kan_algorithm, &kan_complete, &run_arguments](){kan_algorithm.get()->run(kan_complete, run_arguments);});
+		std::size_t loop_count;
+		std::thread kan_thread([&kan_algorithm, &kan_complete, &run_arguments, &loop_count](){loop_count = kan_algorithm.get()->run(kan_complete, run_arguments);});
 		// }}}
 
 		// monitoring GPU {{{
@@ -66,7 +67,8 @@ double run_core(const int gpu_id, const std::unique_ptr<kan_algorithm::kan_base<
 			std::cerr<<std::endl;
 			std::cerr<<"# Result"<<std::endl
 				<<"  - max temperature      : "<<max_temperature<<"C"<<std::endl
-				<<"  - max power            : "<<max_power<<"W"<<std::endl;
+				<<"  - max power            : "<<max_power<<"W"<<std::endl
+				<<"  - loop count           : "<<loop_count<<std::endl;
 		}
 		return max_power;
 	}catch(std::exception&){
