@@ -25,7 +25,7 @@ std::string gpu_monitor::monitor::get_gpu_status_pre_string(const gpu_monitor::s
 		pre_status_string = "Power limit    : " + std::to_string(power_max_limit/1000.0);
 		break;
 	case gpu_monitor::csv:
-		pre_status_string = "temperature,power,power_max_limit";
+		pre_status_string = "temperature,power,power_max_limit,performance,total_used_memory";
 		break;
 	default:
 		break;
@@ -38,6 +38,7 @@ void gpu_monitor::monitor::get_gpu_status(){
 	NVML_ERROR_HANDLE(nvmlDeviceGetTemperature(device, NVML_TEMPERATURE_GPU, &current_temperature));
 	NVML_ERROR_HANDLE(nvmlDeviceGetPowerUsage(device, &current_power));
 	NVML_ERROR_HANDLE(nvmlDeviceGetPerformanceState(device, &current_states));
+	NVML_ERROR_HANDLE(nvmlDeviceGetMemoryInfo(device, &current_memory));
 	// }}}
 
 	// record max {{{
@@ -49,11 +50,12 @@ void gpu_monitor::monitor::get_gpu_status(){
 std::string gpu_monitor::monitor::get_gpu_status_string(const gpu_monitor::string_mode_id string_mode){
 	std::string status_string = "";
 	if(string_mode == gpu_monitor::human){
+		// 桁を揃えたりするためにssを用いる
 		std::stringstream ss;
-		ss<<"Temp: "<<std::setw(3)<<current_temperature<<"C, Pow: "<<std::setw(6)<<(current_power/1000.0)<<"W, Perf: P" + std::to_string((int) current_states);
+		ss<<"Temp: "<<std::setw(3)<<current_temperature<<"C, Pow: "<<std::setw(6)<<(current_power/1000.0)<<"W, Perf: P" + std::to_string((int) current_states)<<", TotalUsedMem: "<<current_memory.used/(1<<20)<<"MB";
 		status_string = ss.str();
 	}else if(string_mode == gpu_monitor::csv){
-		status_string = std::to_string(current_temperature) + "," + std::to_string(current_power/1000.0) + "," + std::to_string(power_max_limit/1000.0);
+		status_string = std::to_string(current_temperature) + "," + std::to_string(current_power/1000.0) + "," + std::to_string(power_max_limit/1000.0) + "," + std::to_string(current_memory.used/(1<<20));
 	}
 
 	return status_string;
