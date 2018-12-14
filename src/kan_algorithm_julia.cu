@@ -31,7 +31,8 @@ template <class T>
 kan_algorithm::julia<T>::julia(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : kan_algorithm::kan_base<T>(gpu_id, num_sm, num_cuda_core_per_sm){}
 
 template <class T>
-void kan_algorithm::julia<T>::run(const bool& complete, std::vector<int> parameters){
+std::size_t kan_algorithm::julia<T>::run(const bool& complete, std::vector<int> parameters){
+	std::size_t loop_count = 0;
 	const std::size_t dim = parameters[0];
 	const std::size_t block_size = parameters[1];
 
@@ -42,7 +43,9 @@ void kan_algorithm::julia<T>::run(const bool& complete, std::vector<int> paramet
 	while(!complete){
 		kernel_julia<T><<<((dim*dim + block_size - 1)/block_size), block_size>>>(d_output.get(), dim);
 		cudaDeviceSynchronize();
+		loop_count++;
 	}
+	return loop_count;
 }
 
 template <class T>

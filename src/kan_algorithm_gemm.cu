@@ -7,7 +7,8 @@ template <class T>
 kan_algorithm::gemm<T>::gemm(const int gpu_id) : kan_algorithm::kan_base<T>(gpu_id, 0, 0){}
 
 template <class T>
-void kan_algorithm::gemm<T>::run(const bool &complete, std::vector<int> parameters){
+std::size_t kan_algorithm::gemm<T>::run(const bool &complete, std::vector<int> parameters){
+	std::size_t loop_count = 0;
 	// 席を計算する行列の大きさ N x N
 	const std::size_t N = parameters[0];
 
@@ -30,7 +31,9 @@ void kan_algorithm::gemm<T>::run(const bool &complete, std::vector<int> paramete
 				dC.get(), N
 				), __FILE__, __LINE__, __func__);
 		cudaDeviceSynchronize();
+		loop_count++;
 	}
+	return loop_count;
 }
 
 template <class T>

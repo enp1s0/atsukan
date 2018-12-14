@@ -16,7 +16,7 @@ public:
 	// 燗アルゴリズムの実行
 	// c : 計算回数を制御する変数．最適化実行時は値を小さくして評価を行う．
 	// parameters : ハイパーパラメータ．最適化ではこれをいじる．
-	virtual void run(const bool& complete, std::vector<hyperparameter::parameter_t> parameters) = 0;
+	virtual std::size_t run(const bool& complete, std::vector<hyperparameter::parameter_t> parameters) = 0;
 	virtual std::vector<hyperparameter::range> get_hyperparameter_ranges() const = 0;
 };
 
@@ -26,7 +26,7 @@ class gemm : public kan_base<T>{
 public:
 	gemm(const int gpu_id);
 	// parameters[0] : 行列サイズ N (N x N)
-	void run(const bool& complete, std::vector<hyperparameter::parameter_t> parameters);
+	std::size_t run(const bool& complete, std::vector<hyperparameter::parameter_t> parameters);
 	std::vector<hyperparameter::range> get_hyperparameter_ranges() const;
 };
 
@@ -38,7 +38,7 @@ public:
 	// parameters[0] : 領域サイズdim (dim x dim)
 	// parameters[1] : gridサイズ
 	// parameters[2] : blockサイズ
-	void run(const bool& complete, std::vector<hyperparameter::parameter_t> parameters);
+	std::size_t run(const bool& complete, std::vector<hyperparameter::parameter_t> parameters);
 	std::vector<hyperparameter::range> get_hyperparameter_ranges() const;
 };
 
@@ -50,7 +50,7 @@ public:
 	// parameters[0] : 星の数
 	// parameters[1] : gridサイズ
 	// parameters[2] : blockサイズ
-	void run(const bool& complete, std::vector<hyperparameter::parameter_t> parameters);
+	std::size_t run(const bool& complete, std::vector<hyperparameter::parameter_t> parameters);
 	std::vector<hyperparameter::range> get_hyperparameter_ranges() const;
 };
 } // kan_module

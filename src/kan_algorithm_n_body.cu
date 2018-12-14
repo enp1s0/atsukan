@@ -70,7 +70,8 @@ template <class T>
 kan_algorithm::n_body<T>::n_body(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : kan_algorithm::kan_base<T>(gpu_id, num_sm, num_cuda_core_per_sm){}
 
 template <class T>
-void kan_algorithm::n_body<T>::run(const bool& complete, std::vector<int> parameters){
+std::size_t kan_algorithm::n_body<T>::run(const bool& complete, std::vector<int> parameters){
+	std::size_t loop_count = 0;
 	const std::size_t N = parameters[0];
 	const std::size_t block_size = parameters[1];
 	const T dt = static_cast<T>(0.001);
@@ -106,8 +107,10 @@ void kan_algorithm::n_body<T>::run(const bool& complete, std::vector<int> parame
 				N
 				);
 		cudaDeviceSynchronize();
+		loop_count++;
 	}
 	cutf::cuda::error::check(cudaGetLastError(), __FILE__, __LINE__, __func__);
+	return loop_count;
 }
 
 template <class T>
