@@ -7,7 +7,8 @@ template <class T>
 kan_algorithm::gemm<T>::gemm(const int gpu_id) : kan_algorithm::kan_base<T>(gpu_id, 0, 0){}
 
 template <class T>
-void kan_algorithm::gemm<T>::run(const std::size_t c, std::size_t &current_computing_c, std::vector<int> parameters){
+std::size_t kan_algorithm::gemm<T>::run(const bool &complete, std::vector<int> parameters){
+	std::size_t loop_count = 0;
 	// 席を計算する行列の大きさ N x N
 	const std::size_t N = parameters[0];
 
@@ -18,7 +19,7 @@ void kan_algorithm::gemm<T>::run(const std::size_t c, std::size_t &current_compu
 	const T alpha = cutf::cuda::type::cast<T>(0.0f);
 	const T beta = cutf::cuda::type::cast<T>(0.0f);
 
-	for(current_computing_c = 0; current_computing_c < c; current_computing_c++){
+	while(!complete){
 		cutf::cublas::error::check(cutf::cublas::gemm(
 				*cublas.get(),
 				CUBLAS_OP_N, CUBLAS_OP_N,
@@ -29,7 +30,17 @@ void kan_algorithm::gemm<T>::run(const std::size_t c, std::size_t &current_compu
 				&beta,
 				dC.get(), N
 				), __FILE__, __LINE__, __func__);
+		cudaDeviceSynchronize();
+		loop_count++;
 	}
+	return loop_count;
+}
+
+template <class T>
+std::vector<hyperparameter::range> kan_algorithm::gemm<T>::get_hyperparameter_ranges() const{
+	return {
+		{"N","matrix size N x N", 1<<6, 1<<11, [](hyperparameter::parameter_t a){return a * 2;}}
+	};
 }
 
 template class kan_algorithm::gemm<float>;
