@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-std=c++14 -I./src/cutf -I./src/cxxopts/include -I/usr/local/cuda/samples/common/inc/ -O3
+CXXFLAGS=-std=c++14 -I./src/cutf -I./src/cxxopts/include -O3
 OMPFLAGS=-fopenmp
 NVCC=nvcc
 NVCCFLAGS=$(CXXFLAGS)  --compiler-bindir=$(CXX) -Xcompiler=$(OMPFLAGS) -lcublas -arch=sm_30 -lnvidia-ml
