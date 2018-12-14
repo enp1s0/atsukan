@@ -5,6 +5,7 @@
 #include <functional>
 #include <memory>
 #include <thread>
+#include <chrono>
 #include "kan.hpp"
 #include "kan_algorithm.hpp"
 
@@ -30,6 +31,8 @@ std::unique_ptr<kan_algorithm::kan_base<T>> get_kan_algorithm(const int gpu_id, 
 template <class T>
 double run_core(const int gpu_id, const std::unique_ptr<kan_algorithm::kan_base<T>> &kan_algorithm, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time, const std::vector<int>& run_arguments){
 	try{
+		// real elapsed time
+		const auto start_clock = std::chrono::system_clock::now();
 		// start kan thread {{{
 		bool kan_complete = false;
 		std::size_t loop_count;
@@ -61,6 +64,8 @@ double run_core(const int gpu_id, const std::unique_ptr<kan_algorithm::kan_base<
 		kan_complete = true;
 		// }}}
 		kan_thread.join();
+		const auto end_clock = std::chrono::system_clock::now();
+
 		const auto max_power = monitor.get_max_power()/1000.0;
 		if(string_mode_id != gpu_monitor::none){
 			const auto max_temperature = monitor.get_max_temperature();
@@ -68,7 +73,8 @@ double run_core(const int gpu_id, const std::unique_ptr<kan_algorithm::kan_base<
 			std::cerr<<"# Result"<<std::endl
 				<<"  - max temperature      : "<<max_temperature<<"C"<<std::endl
 				<<"  - max power            : "<<max_power<<"W"<<std::endl
-				<<"  - loop count           : "<<loop_count<<std::endl;
+				<<"  - loop count           : "<<loop_count<<std::endl
+				<<"  - real elapsed time    : "<<std::chrono::duration_cast<std::chrono::milliseconds>(end_clock - start_clock).count()/1000.0<<"s"<<std::endl;
 		}
 		return max_power;
 	}catch(std::exception&){
