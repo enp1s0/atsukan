@@ -10,17 +10,17 @@
 
 namespace{
 template <class T>
-std::unique_ptr<kan_algorithm::kan_base<T>> get_kan_algorithm(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id){
+std::unique_ptr<kan_algorithm::kan_base<T>> get_kan_algorithm(const int gpu_id, kan::algorithm_id algorithm_id){
 	kan_algorithm::kan_base<T>* kan_algorithm_ptr = nullptr;
 	switch (algorithm_id) {
 	case kan::algorithm_id::gemm:
 		kan_algorithm_ptr = new kan_algorithm::gemm<T>(gpu_id);
 		break;
 	case kan::algorithm_id::julia:
-		kan_algorithm_ptr = new kan_algorithm::julia<T>(gpu_id, num_sm, num_cuda_core_per_sm);
+		kan_algorithm_ptr = new kan_algorithm::julia<T>(gpu_id);
 		break;
 	case kan::algorithm_id::n_body:
-		kan_algorithm_ptr = new kan_algorithm::n_body<T>(gpu_id, num_sm, num_cuda_core_per_sm);
+		kan_algorithm_ptr = new kan_algorithm::n_body<T>(gpu_id);
 		break;
 	default:
 		; // 世界で一番簡単な文
@@ -113,14 +113,14 @@ bool update_hyperparameter(std::vector<hyperparameter::parameter_t>& hyperparame
 } // noname namespace
 
 template <class T>
-double kan::run(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time, std::vector<int> run_arguments){
-	const auto kan_algorithm = get_kan_algorithm<T>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id);
+double kan::run(const int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time, std::vector<int> run_arguments){
+	const auto kan_algorithm = get_kan_algorithm<T>(gpu_id, algorithm_id);
 	return run_core<T>(gpu_id, kan_algorithm, string_mode_id, computing_time, run_arguments);
 }
 
 template <class T>
-void kan::optimize(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time){
-	const auto kan_algorithm = get_kan_algorithm<T>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id);
+void kan::optimize(const int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time){
+	const auto kan_algorithm = get_kan_algorithm<T>(gpu_id, algorithm_id);
 	const auto parameter_ranges = kan_algorithm.get()->get_hyperparameter_ranges();
 
 
@@ -180,8 +180,8 @@ void kan::optimize(const int gpu_id, const int num_sm, const int num_cuda_core_p
 
 }
 
-template double kan::run<float>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>);
-template double kan::run<double>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>);
-template void kan::optimize<float>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t);
-template void kan::optimize<double>(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t);
+template double kan::run<float>(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>);
+template double kan::run<double>(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>);
+template void kan::optimize<float>(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t);
+template void kan::optimize<double>(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t);
 // instance

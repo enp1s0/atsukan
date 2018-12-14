@@ -8,10 +8,8 @@ template <class T>
 class kan_base{
 private:
 	int gpu_id;
-	int num_sm;
-	int num_cuda_core_per_sm;
 public:
-	kan_base(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : gpu_id(gpu_id), num_sm(num_sm), num_cuda_core_per_sm(num_cuda_core_per_sm){}
+	kan_base(const int gpu_id) : gpu_id(gpu_id){};
 
 	// 燗アルゴリズムの実行
 	// c : 計算回数を制御する変数．最適化実行時は値を小さくして評価を行う．
@@ -34,7 +32,7 @@ public:
 template <class T>
 class julia : public kan_base<T>{
 public:
-	julia(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm);
+	julia(const int gpu_id);
 	// parameters[0] : 領域サイズdim (dim x dim)
 	// parameters[1] : gridサイズ
 	// parameters[2] : blockサイズ
@@ -46,7 +44,7 @@ public:
 template <class T>
 class n_body : public kan_base<T>{
 public:
-	n_body(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm);
+	n_body(const int gpu_id);
 	// parameters[0] : 星の数
 	// parameters[1] : gridサイズ
 	// parameters[2] : blockサイズ

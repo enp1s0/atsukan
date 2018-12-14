@@ -28,7 +28,7 @@ __global__ void kernel_julia(T* const output, const std::size_t dim){
 }
 
 template <class T>
-kan_algorithm::julia<T>::julia(const int gpu_id, const int num_sm, const int num_cuda_core_per_sm) : kan_algorithm::kan_base<T>(gpu_id, num_sm, num_cuda_core_per_sm){}
+kan_algorithm::julia<T>::julia(const int gpu_id) : kan_algorithm::kan_base<T>(gpu_id){}
 
 template <class T>
 std::size_t kan_algorithm::julia<T>::run(const bool& complete, std::vector<int> parameters){
