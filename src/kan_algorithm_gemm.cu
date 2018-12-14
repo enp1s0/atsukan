@@ -42,5 +42,3 @@ std::vector<hyperparameter::range> kan_algorithm::gemm<T>::get_hyperparameter_ra
 
 template class kan_algorithm::gemm<float>;
 template class kan_algorithm::gemm<double>;
-
-
