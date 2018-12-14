@@ -22,18 +22,18 @@ gpu_monitor::string_mode_id get_string_mode_id(const std::string string_mode_nam
 }
 
 // 計算型の文字列を受け取ってtemplate引数を設定した関数を返す
-std::function<void(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>)> get_run_function(const std::string type_name){
-	if(type_name == "float") return [](int gpu_id, int num_sm, int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, std::size_t computing_c, std::vector<int> args)
-		{kan::run<float>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id, string_mode_id, computing_c, args);};
-	if(type_name == "double") return [](int gpu_id, int num_sm, int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, std::size_t computing_c, std::vector<int> args)
-		{kan::run<double>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id, string_mode_id, computing_c, args);};
+std::function<void(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>)> get_run_function(const std::string type_name){
+	if(type_name == "float") return [](int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, std::size_t computing_c, std::vector<int> args)
+		{kan::run<float>(gpu_id, algorithm_id, string_mode_id, computing_c, args);};
+	if(type_name == "double") return [](int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, std::size_t computing_c, std::vector<int> args)
+		{kan::run<double>(gpu_id, algorithm_id, string_mode_id, computing_c, args);};
 	throw std::runtime_error("No such a type : " + type_name);
 }
-std::function<void(int, int, int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t)> get_optimize_function(const std::string type_name){
-	if(type_name == "float") return [](int gpu_id, int num_sm, int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, std::size_t computing_c)
-		{kan::optimize<float>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id, string_mode_id, computing_c);};
-	if(type_name == "double") return [](int gpu_id, int num_sm, int num_cuda_core_per_sm, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, std::size_t computing_c)
-		{kan::optimize<double>(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id, string_mode_id, computing_c);};
+std::function<void(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t)> get_optimize_function(const std::string type_name){
+	if(type_name == "float") return [](int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, std::size_t computing_c)
+		{kan::optimize<float>(gpu_id, algorithm_id, string_mode_id, computing_c);};
+	if(type_name == "double") return [](int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, std::size_t computing_c)
+		{kan::optimize<double>(gpu_id, algorithm_id, string_mode_id, computing_c);};
 	throw std::runtime_error("No such a type : " + type_name);
 }
 }
@@ -107,10 +107,10 @@ int main(int argc, char** argv){
 	// run {{{
 	if(args.count("opt")){
 		const auto optimize_function = get_optimize_function(type_name);
-		optimize_function(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id, string_mode_id, execution_time);
+		optimize_function(gpu_id, algorithm_id, string_mode_id, execution_time);
 	}else{
 		const auto run_function = get_run_function(type_name);
-		run_function(gpu_id, num_sm, num_cuda_core_per_sm, algorithm_id, string_mode_id, execution_time, {1<<13, 256});
+		run_function(gpu_id, algorithm_id, string_mode_id, execution_time, {1<<13, 256});
 	}
 	// }}}
 }
