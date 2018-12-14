@@ -38,6 +38,7 @@ void gpu_monitor::monitor::get_gpu_status(){
 	NVML_ERROR_HANDLE(nvmlDeviceGetTemperature(device, NVML_TEMPERATURE_GPU, &current_temperature));
 	NVML_ERROR_HANDLE(nvmlDeviceGetPowerUsage(device, &current_power));
 	NVML_ERROR_HANDLE(nvmlDeviceGetPerformanceState(device, &current_states));
+	NVML_ERROR_HANDLE(nvmlDeviceGetMemoryInfo(device, &current_memory));
 	// }}}
 
 	// record max {{{

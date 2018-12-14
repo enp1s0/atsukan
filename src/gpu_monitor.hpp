@@ -21,6 +21,7 @@ class monitor{
 	unsigned int current_temperature;
 	unsigned int current_power;
 	nvmlPstates_t current_states;
+	nvmlMemory_t current_memory;
 public:
 	monitor(unsigned int gpu_id);
 	~monitor();
