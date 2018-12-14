@@ -25,6 +25,7 @@ public:
 	monitor(unsigned int gpu_id);
 	~monitor();
 	std::string get_gpu_status_string(const string_mode_id string_mode);
+	// CSVの項目名などの情報を表示
 	std::string get_gpu_status_pre_string(const string_mode_id string_mode);
 
 	void get_gpu_status();

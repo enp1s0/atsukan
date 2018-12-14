@@ -47,7 +47,6 @@ void gpu_monitor::monitor::get_gpu_status(){
 }
 
 std::string gpu_monitor::monitor::get_gpu_status_string(const gpu_monitor::string_mode_id string_mode){
-
 	std::string status_string = "";
 	if(string_mode == gpu_monitor::human){
 		std::stringstream ss;
