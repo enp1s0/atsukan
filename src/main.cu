@@ -4,7 +4,6 @@
 #include <vector>
 #include <cxxopts.hpp>
 #include <cutf/device.hpp>
-#include <helper_cuda.h>
 #include "kan.hpp"
 #include "gpu_monitor.hpp"
 
@@ -69,14 +68,12 @@ int main(int argc, char** argv){
 	}
 	const auto device_prop = device_props[gpu_id];
 	const int num_sm = device_prop.multiProcessorCount;
-	const int num_cuda_core_per_sm = _ConvertSMVer2Cores(device_prop.major, device_prop.minor);
 
 	std::cerr
 		<<"# Device information"<<std::endl
 		<<"  - GPU ID               : "<<gpu_id<<std::endl
 		<<"  - GPU name             : "<<device_prop.name<<std::endl
 		<<"  - #SM                  : "<<num_sm<<std::endl
-		<<"  - #CUDA Cores per a SM : "<<num_cuda_core_per_sm<<std::endl
 		<<"  - Clock rate           : "<<device_prop.clockRate<<" kHz"<<std::endl;
 	std::cerr<<std::endl;
 	// }}}
