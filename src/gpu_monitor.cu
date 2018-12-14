@@ -50,6 +50,7 @@ void gpu_monitor::monitor::get_gpu_status(){
 std::string gpu_monitor::monitor::get_gpu_status_string(const gpu_monitor::string_mode_id string_mode){
 	std::string status_string = "";
 	if(string_mode == gpu_monitor::human){
+		// 桁を揃えたりするためにssを用いる
 		std::stringstream ss;
 		ss<<"Temp: "<<std::setw(3)<<current_temperature<<"C, Pow: "<<std::setw(6)<<(current_power/1000.0)<<"W, Perf: P" + std::to_string((int) current_states)<<", TotalUsedMem: "<<current_memory.used/(1<<20)<<"MB";
 		status_string = ss.str();
