@@ -36,6 +36,23 @@ std::function<void(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::siz
 		{kan::optimize<double>(gpu_id, algorithm_id, string_mode_id, computing_c);};
 	throw std::runtime_error("No such a type : " + type_name);
 }
+std::vector<hyperparameter::parameter_t> get_hyperparameters_from_string(const std::string str){
+	std::vector<hyperparameter::parameter_t> run_arguments;
+	std::size_t start_pos = 0;
+	std::size_t end_pos = 0;
+	while((end_pos = str.find(":", start_pos)) != std::string::npos){
+		const auto parameter = std::stol(str.substr(start_pos, (end_pos - start_pos)));
+		run_arguments.push_back(parameter);
+		start_pos = end_pos + 1;
+	}
+	// 最後の数字だけは後ろに:がないので別処理
+	if(str.length() != 0){
+		const auto parameter = std::stol(str.substr(start_pos, (str.length() - start_pos + 1)));
+		run_arguments.push_back(parameter);
+	}
+
+	return run_arguments;
+}
 }
 
 int main(int argc, char** argv){
