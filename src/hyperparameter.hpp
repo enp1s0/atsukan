@@ -4,7 +4,7 @@
 #include <functional>
 
 namespace hyperparameter{
-using parameter_t = int;
+using parameter_t = long;
 struct range{
 	std::string name;
 	std::string description;
