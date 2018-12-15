@@ -48,12 +48,16 @@ double run_core(const int gpu_id, const std::unique_ptr<kan_algorithm::kan_base<
 			}
 			std::cerr<<monitor.get_gpu_status_pre_string(string_mode_id)<<std::endl;
 		}
+		bool nvml_not_supported = false;
 		for(std::size_t time = 0; time < computing_time; time++){
 			const auto elapsed_time = std::time(nullptr) - start_timestamp;
 			try{
 				monitor.get_gpu_status();
 			}catch(std::exception& e){
-				std::cerr<<e.what()<<std::endl;
+				if(nvml_not_supported == false){
+					std::cerr<<e.what()<<std::endl;
+				}
+				nvml_not_supported = true;
 			}
 			if(string_mode_id != gpu_monitor::none){
 				if(string_mode_id == gpu_monitor::csv){
@@ -75,12 +79,17 @@ double run_core(const int gpu_id, const std::unique_ptr<kan_algorithm::kan_base<
 			const auto max_temperature = monitor.get_max_temperature();
 			std::cerr<<std::endl;
 			std::cerr<<"# Result"<<std::endl
-				<<"  - max temperature      : "<<max_temperature<<"C"<<std::endl
-				<<"  - max power            : "<<max_power<<"W"<<std::endl
-				<<"  - loop count           : "<<loop_count<<std::endl
-				<<"  - real elapsed time    : "<<std::chrono::duration_cast<std::chrono::milliseconds>(end_clock - start_clock).count()/1000.0<<"s"<<std::endl;
+				<<"  - max temperature      : "<<max_temperature<<"C"<<std::endl;
+			if(nvml_not_supported){
+				std::cerr<<"  - loop count           : "<<loop_count<<std::endl;
+			}else{
+				std::cerr<<"  - max power            : "<<max_power<<"W"<<std::endl
+					<<"  - loop count           : "<<loop_count<<std::endl;
+			}
+			std::cerr<<"  - real elapsed time    : "<<std::chrono::duration_cast<std::chrono::milliseconds>(end_clock - start_clock).count()/1000.0<<"s"<<std::endl;
 		}
-		return max_power;
+
+		return nvml_not_supported ? static_cast<double>(loop_count) : max_power;
 	}catch(std::exception&){
 		return 0.0;
 	}
@@ -171,7 +180,7 @@ void kan::optimize(const int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor
 				std::cout<<p<<",";
 			}
 			std::cout<<std::endl;
-			std::cout<<"    - power              : "<<power<<"W"<<std::endl;
+			std::cout<<"    - value              : "<<power<<std::endl;
 		}
 		if(power > max_power){
 			max_power = power;
@@ -186,7 +195,7 @@ void kan::optimize(const int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor
 		std::cout<<p<<",";
 	}
 	std::cout<<std::endl;
-	std::cout<<"  - max power            : "<<max_power<<"W"<<std::endl;
+	std::cout<<"  - max value            : "<<max_power<<std::endl;
 
 }
 
