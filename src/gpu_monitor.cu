@@ -36,10 +36,11 @@ std::string gpu_monitor::monitor::get_gpu_status_pre_string(const gpu_monitor::s
 
 void gpu_monitor::monitor::get_gpu_status(){
 	// get gpu temperature/power {{{
+	// GTX650で例外が起きない順に取得する
 	NVML_ERROR_HANDLE(nvmlDeviceGetTemperature(device, NVML_TEMPERATURE_GPU, &current_temperature));
-	NVML_ERROR_HANDLE(nvmlDeviceGetPowerUsage(device, &current_power));
-	NVML_ERROR_HANDLE(nvmlDeviceGetPerformanceState(device, &current_states));
 	NVML_ERROR_HANDLE(nvmlDeviceGetMemoryInfo(device, &current_memory));
+	NVML_ERROR_HANDLE(nvmlDeviceGetPerformanceState(device, &current_states));
+	NVML_ERROR_HANDLE(nvmlDeviceGetPowerUsage(device, &current_power));
 	// }}}
 
 	// record max {{{
