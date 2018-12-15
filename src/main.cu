@@ -44,7 +44,7 @@ int main(int argc, char** argv){
 	options.add_options()
 		("a,algorithm", "Computing algorithm", cxxopts::value<std::string>()->default_value("julia"))
 		("g,gpu", "GPU ID", cxxopts::value<unsigned int>()->default_value("0"))
-		("p,print_mode", "Printig mdoe", cxxopts::value<std::string>()->default_value("human"))
+		("o,output_mode", "Output mode (csv/human)", cxxopts::value<std::string>()->default_value("human"))
 		("s,second", "Heating time[s]", cxxopts::value<std::size_t>()->default_value("5"))
 		("t,type", "Computing type", cxxopts::value<std::string>()->default_value("float"))
 		("opt", "Run optimization")
@@ -83,7 +83,7 @@ int main(int argc, char** argv){
 	const auto type_name = args["type"].as<std::string>();
 	const auto algorithm_id = get_algorithm_id(algorithm_name);
 	const auto execution_time = args["second"].as<std::size_t>();
-	const auto string_mode_name = args["print_mode"].as<std::string>();
+	const auto string_mode_name = args["output_mode"].as<std::string>();
 	const auto string_mode_id = get_string_mode_id(string_mode_name);
 	
 	// print algorithm information {{{
@@ -98,7 +98,7 @@ int main(int argc, char** argv){
 	// print output information {{{
 	std::cerr
 		<<"# Output information"<<std::endl
-		<<"  - Output string type   : "<<string_mode_name<<std::endl;
+		<<"  - Output mode          : "<<string_mode_name<<std::endl;
 	std::cerr<<std::endl;
 	// }
 
