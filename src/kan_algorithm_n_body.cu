@@ -70,7 +70,7 @@ template <class T>
 kan_algorithm::n_body<T>::n_body(const int gpu_id) : kan_algorithm::kan_base<T>(gpu_id){}
 
 template <class T>
-std::size_t kan_algorithm::n_body<T>::run(const bool& complete, std::vector<int> parameters){
+std::size_t kan_algorithm::n_body<T>::run(const bool& complete, std::vector<hyperparameter::parameter_t> parameters){
 	std::size_t loop_count = 0;
 	const std::size_t N = parameters[0];
 	const std::size_t block_size = parameters[1];

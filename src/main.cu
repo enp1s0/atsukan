@@ -6,6 +6,7 @@
 #include <cutf/device.hpp>
 #include "kan.hpp"
 #include "gpu_monitor.hpp"
+#include "hyperparameter.hpp"
 
 namespace{
 kan::algorithm_id get_algorithm_id(const std::string algorithm_name){
@@ -21,10 +22,10 @@ gpu_monitor::string_mode_id get_string_mode_id(const std::string string_mode_nam
 }
 
 // 計算型の文字列を受け取ってtemplate引数を設定した関数を返す
-std::function<void(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>)> get_run_function(const std::string type_name){
-	if(type_name == "float") return [](int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, std::size_t computing_c, std::vector<int> args)
+std::function<void(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<hyperparameter::parameter_t>)> get_run_function(const std::string type_name){
+	if(type_name == "float") return [](int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, std::size_t computing_c, std::vector<hyperparameter::parameter_t> args)
 		{kan::run<float>(gpu_id, algorithm_id, string_mode_id, computing_c, args);};
-	if(type_name == "double") return [](int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, std::size_t computing_c, std::vector<int> args)
+	if(type_name == "double") return [](int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, std::size_t computing_c, std::vector<hyperparameter::parameter_t> args)
 		{kan::run<double>(gpu_id, algorithm_id, string_mode_id, computing_c, args);};
 	throw std::runtime_error("No such a type : " + type_name);
 }
