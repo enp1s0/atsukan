@@ -29,7 +29,7 @@ std::unique_ptr<kan_algorithm::kan_base<T>> get_kan_algorithm(const int gpu_id, 
 	return std::unique_ptr<kan_algorithm::kan_base<T>>{kan_algorithm_ptr};
 }
 template <class T>
-double run_core(const int gpu_id, const std::unique_ptr<kan_algorithm::kan_base<T>> &kan_algorithm, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time, const std::vector<int>& run_arguments){
+double run_core(const int gpu_id, const std::unique_ptr<kan_algorithm::kan_base<T>> &kan_algorithm, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time, const std::vector<hyperparameter::parameter_t>& run_arguments){
 	try{
 		// real elapsed time
 		const auto start_clock = std::chrono::system_clock::now();
@@ -119,7 +119,7 @@ bool update_hyperparameter(std::vector<hyperparameter::parameter_t>& hyperparame
 } // noname namespace
 
 template <class T>
-double kan::run(const int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time, std::vector<int> run_arguments){
+double kan::run(const int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time, std::vector<hyperparameter::parameter_t> run_arguments){
 	const auto kan_algorithm = get_kan_algorithm<T>(gpu_id, algorithm_id);
 	return run_core<T>(gpu_id, kan_algorithm, string_mode_id, computing_time, run_arguments);
 }
@@ -186,8 +186,8 @@ void kan::optimize(const int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor
 
 }
 
-template double kan::run<float>(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>);
-template double kan::run<double>(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<int>);
+template double kan::run<float>(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<hyperparameter::parameter_t>);
+template double kan::run<double>(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t, std::vector<hyperparameter::parameter_t>);
 template void kan::optimize<float>(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t);
 template void kan::optimize<double>(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::size_t);
 // instance
