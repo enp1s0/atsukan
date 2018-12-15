@@ -139,9 +139,9 @@ void print_hyperparameter_informaition(const std::vector<hyperparameter::range>&
 	}
 	std::cerr<<std::endl;
 }
-void print_hyperparameter_values(const std::vector<hyperparameter::parameter_t> &params){
+void print_hyperparameter_values(const std::vector<hyperparameter::parameter_t> &run_arguments){
 	std::cerr<<"  - hyperparameters      : ";
-	for(const auto& p : params){
+	for(const auto& p : run_arguments){
 		std::cerr<<p<<",";
 	}
 	std::cerr<<std::endl;
@@ -174,17 +174,17 @@ void kan::optimize(const int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor
 	std::vector<hyperparameter::parameter_t> max_params(parameter_ranges.size());
 	double max_power = 0.0;
 	// まず，ハイパーパラメータにそれぞれの最小値をセット
-	std::vector<hyperparameter::parameter_t> params;
+	std::vector<hyperparameter::parameter_t> run_arguments;
 	for(const auto p : parameter_ranges){
-		params.push_back(p.min);
+		run_arguments.push_back(p.min);
 	}
 	std::size_t experiment_id = 0;
 	do{
 		// 燗関数を実行
-		const auto power = run_core<T>(gpu_id, kan_algorithm, gpu_monitor::string_mode_id::none, computing_time, params);
+		const auto power = run_core<T>(gpu_id, kan_algorithm, gpu_monitor::string_mode_id::none, computing_time, run_arguments);
 		// CSV形式で結果を表示
 		if(string_mode_id == gpu_monitor::string_mode_id::csv){
-			for(const auto& p : params){
+			for(const auto& p : run_arguments){
 				std::cout<<p<<",";
 			}
 			std::cout<<power<<std::endl;
@@ -192,14 +192,14 @@ void kan::optimize(const int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor
 		// 人間に優しく表示
 		else if(string_mode_id == gpu_monitor::string_mode_id::human){
 			std::cout<<"## Experiment "<<(experiment_id++)<<std::endl;
-			print_hyperparameter_values(params);
+			print_hyperparameter_values(run_arguments);
 			std::cout<<"    - value              : "<<power<<std::endl;
 		}
 		if(power > max_power){
 			max_power = power;
-			std::copy(params.begin(), params.end(), max_params.begin());
+			std::copy(run_arguments.begin(), run_arguments.end(), max_params.begin());
 		}
-	}while(! update_hyperparameter(params, parameter_ranges));
+	}while(! update_hyperparameter(run_arguments, parameter_ranges));
 
 	std::cerr<<std::endl;
 	std::cerr<<"# Optimization result"<<std::endl;
