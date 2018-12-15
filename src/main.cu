@@ -64,6 +64,7 @@ int main(int argc, char** argv){
 		("o,output_mode", "Output mode (csv/human)", cxxopts::value<std::string>()->default_value("human"))
 		("s,second", "Heating time[s]", cxxopts::value<std::size_t>()->default_value("5"))
 		("t,type", "Computing type", cxxopts::value<std::string>()->default_value("float"))
+		("p,parameters", "Hyperparameters (e.g. 1024:2:3)", cxxopts::value<std::string>())
 		("opt", "Run optimization")
 		("h,help", "Help");
 	const auto args = options.parse(argc, argv);
