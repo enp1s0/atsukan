@@ -10,7 +10,8 @@
 gpu_monitor::monitor::monitor(unsigned int gpu_id) : max_power(0), max_temperature(0){
 	NVML_ERROR_HANDLE(nvmlInit());
 	NVML_ERROR_HANDLE(nvmlDeviceGetHandleByIndex(gpu_id, &device));
-	NVML_ERROR_HANDLE(nvmlDeviceGetEnforcedPowerLimit(device, &power_max_limit));
+	// コンストラクタで例外は見なかったことにしてほしい
+	nvmlDeviceGetEnforcedPowerLimit(device, &power_max_limit);
 }
 gpu_monitor::monitor::~monitor(){
 	NVML_ERROR_HANDLE(nvmlShutdown());
