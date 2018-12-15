@@ -126,7 +126,8 @@ int main(int argc, char** argv){
 		optimize_function(gpu_id, algorithm_id, string_mode_id, execution_time);
 	}else{
 		const auto run_function = get_run_function(type_name);
-		run_function(gpu_id, algorithm_id, string_mode_id, execution_time, {1<<13, 256});
+		const auto run_arguments = (args.count("parameters") != 0) ? get_hyperparameters_from_string(args["parameters"].as<std::string>()) : std::vector<hyperparameter::parameter_t>{};
+		run_function(gpu_id, algorithm_id, string_mode_id, execution_time, run_arguments);
 	}
 	// }}}
 }
