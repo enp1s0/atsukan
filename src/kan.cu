@@ -50,7 +50,11 @@ double run_core(const int gpu_id, const std::unique_ptr<kan_algorithm::kan_base<
 		}
 		for(std::size_t time = 0; time < computing_time; time++){
 			const auto elapsed_time = std::time(nullptr) - start_timestamp;
-			monitor.get_gpu_status();
+			try{
+				monitor.get_gpu_status();
+			}catch(std::exception& e){
+				std::cerr<<e.what()<<std::endl;
+			}
 			if(string_mode_id != gpu_monitor::none){
 				if(string_mode_id == gpu_monitor::csv){
 					std::cout<<elapsed_time<<",";
