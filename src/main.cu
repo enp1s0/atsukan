@@ -36,6 +36,23 @@ std::function<void(int, kan::algorithm_id, gpu_monitor::string_mode_id, std::siz
 		{kan::optimize<double>(gpu_id, algorithm_id, string_mode_id, computing_c);};
 	throw std::runtime_error("No such a type : " + type_name);
 }
+std::vector<hyperparameter::parameter_t> get_hyperparameters_from_string(const std::string str){
+	std::vector<hyperparameter::parameter_t> run_arguments;
+	std::size_t start_pos = 0;
+	std::size_t end_pos = 0;
+	while((end_pos = str.find(":", start_pos)) != std::string::npos){
+		const auto parameter = std::stol(str.substr(start_pos, (end_pos - start_pos)));
+		run_arguments.push_back(parameter);
+		start_pos = end_pos + 1;
+	}
+	// 最後の数字だけは後ろに:がないので別処理
+	if(str.length() != 0){
+		const auto parameter = std::stol(str.substr(start_pos, (str.length() - start_pos + 1)));
+		run_arguments.push_back(parameter);
+	}
+
+	return run_arguments;
+}
 }
 
 int main(int argc, char** argv){
@@ -44,9 +61,10 @@ int main(int argc, char** argv){
 	options.add_options()
 		("a,algorithm", "Computing algorithm", cxxopts::value<std::string>()->default_value("julia"))
 		("g,gpu", "GPU ID", cxxopts::value<unsigned int>()->default_value("0"))
-		("p,print_mode", "Printig mdoe", cxxopts::value<std::string>()->default_value("human"))
+		("o,output_mode", "Output mode (csv/human)", cxxopts::value<std::string>()->default_value("human"))
 		("s,second", "Heating time[s]", cxxopts::value<std::size_t>()->default_value("5"))
 		("t,type", "Computing type", cxxopts::value<std::string>()->default_value("float"))
+		("p,parameters", "Hyperparameters (e.g. 1024:2:3)", cxxopts::value<std::string>())
 		("opt", "Run optimization")
 		("h,help", "Help");
 	const auto args = options.parse(argc, argv);
@@ -83,7 +101,7 @@ int main(int argc, char** argv){
 	const auto type_name = args["type"].as<std::string>();
 	const auto algorithm_id = get_algorithm_id(algorithm_name);
 	const auto execution_time = args["second"].as<std::size_t>();
-	const auto string_mode_name = args["print_mode"].as<std::string>();
+	const auto string_mode_name = args["output_mode"].as<std::string>();
 	const auto string_mode_id = get_string_mode_id(string_mode_name);
 	
 	// print algorithm information {{{
@@ -98,7 +116,7 @@ int main(int argc, char** argv){
 	// print output information {{{
 	std::cerr
 		<<"# Output information"<<std::endl
-		<<"  - Output string type   : "<<string_mode_name<<std::endl;
+		<<"  - Output mode          : "<<string_mode_name<<std::endl;
 	std::cerr<<std::endl;
 	// }
 
@@ -108,7 +126,8 @@ int main(int argc, char** argv){
 		optimize_function(gpu_id, algorithm_id, string_mode_id, execution_time);
 	}else{
 		const auto run_function = get_run_function(type_name);
-		run_function(gpu_id, algorithm_id, string_mode_id, execution_time, {1<<13, 256});
+		const auto run_arguments = (args.count("parameters") != 0) ? get_hyperparameters_from_string(args["parameters"].as<std::string>()) : std::vector<hyperparameter::parameter_t>{};
+		run_function(gpu_id, algorithm_id, string_mode_id, execution_time, run_arguments);
 	}
 	// }}}
 }
