@@ -154,6 +154,10 @@ double kan::run(const int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor::s
 	const auto kan_algorithm = get_kan_algorithm<T>(gpu_id, algorithm_id);
 	const auto parameter_ranges = kan_algorithm.get()->get_hyperparameter_ranges();
 
+	if(parameter_ranges.size() != run_arguments.size()){
+		throw std::runtime_error("The number of the kan module parameter is " + std::to_string(parameter_ranges.size()) + ", but given parameters are " + std::to_string(run_arguments.size()));
+	}
+
 	if(string_mode_id != gpu_monitor::string_mode_id::none){
 		print_hyperparameter_informaition(parameter_ranges);
 		print_hyperparameter_values(run_arguments);
