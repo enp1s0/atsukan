@@ -129,11 +129,36 @@ bool update_hyperparameter(std::vector<hyperparameter::parameter_t>& hyperparame
 		}
 	}
 }
+void print_hyperparameter_informaition(const std::vector<hyperparameter::range>& parameter_ranges){
+	// 範囲を表示
+	std::cerr<<"# Hyperparameters information"<<std::endl;
+	for(const auto& p : parameter_ranges){
+		std::cerr<<"  - "<<p.name<<std::endl;
+		std::cerr<<"    - description        : "<<p.description<<std::endl;
+		std::cerr<<"    - range              : "<<p.min<<" ~ "<<p.max<<std::endl;
+	}
+	std::cerr<<std::endl;
+}
+void print_hyperparameter_values(const std::vector<hyperparameter::parameter_t> &params){
+	std::cerr<<"  - hyperparameters      : ";
+	for(const auto& p : params){
+		std::cerr<<p<<",";
+	}
+	std::cerr<<std::endl;
+	std::cerr<<std::endl;
+}
 } // noname namespace
 
 template <class T>
 double kan::run(const int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor::string_mode_id string_mode_id, const std::size_t computing_time, std::vector<hyperparameter::parameter_t> run_arguments){
 	const auto kan_algorithm = get_kan_algorithm<T>(gpu_id, algorithm_id);
+	const auto parameter_ranges = kan_algorithm.get()->get_hyperparameter_ranges();
+
+	if(string_mode_id != gpu_monitor::string_mode_id::none){
+		print_hyperparameter_informaition(parameter_ranges);
+		print_hyperparameter_values(run_arguments);
+	}
+
 	return run_core<T>(gpu_id, kan_algorithm, string_mode_id, computing_time, run_arguments);
 }
 
@@ -142,16 +167,8 @@ void kan::optimize(const int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor
 	const auto kan_algorithm = get_kan_algorithm<T>(gpu_id, algorithm_id);
 	const auto parameter_ranges = kan_algorithm.get()->get_hyperparameter_ranges();
 
-
-	// 範囲を表示
 	if(string_mode_id != gpu_monitor::string_mode_id::none){
-		std::cerr<<"# Hyperparameters information"<<std::endl;
-		for(const auto& p : parameter_ranges){
-			std::cerr<<"  - "<<p.name<<std::endl;
-			std::cerr<<"    - description        : "<<p.description<<std::endl;
-			std::cerr<<"    - range              : "<<p.min<<" ~ "<<p.max<<std::endl;
-		}
-		std::cerr<<std::endl;
+		print_hyperparameter_informaition(parameter_ranges);
 	}
 
 	std::vector<hyperparameter::parameter_t> max_params(parameter_ranges.size());
@@ -175,11 +192,7 @@ void kan::optimize(const int gpu_id, kan::algorithm_id algorithm_id, gpu_monitor
 		// 人間に優しく表示
 		else if(string_mode_id == gpu_monitor::string_mode_id::human){
 			std::cout<<"## Experiment "<<(experiment_id++)<<std::endl;
-			std::cout<<"    - parameters         : ";
-			for(const auto& p : params){
-				std::cout<<p<<",";
-			}
-			std::cout<<std::endl;
+			print_hyperparameter_values(params);
 			std::cout<<"    - value              : "<<power<<std::endl;
 		}
 		if(power > max_power){
